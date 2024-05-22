@@ -802,6 +802,7 @@ GameObject:
   - component: {fileID: 738096536}
   - component: {fileID: 738096538}
   - component: {fileID: 738096537}
+  - component: {fileID: 738096539}
   m_Layer: 0
   m_Name: WalletManager
   m_TagString: Untagged
@@ -858,6 +859,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0519677d492fc6c4aaf0ddc763a31374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &738096539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738096533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2942361b890d384d874b2873ac10621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &795297913
