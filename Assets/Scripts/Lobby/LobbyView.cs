@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Thirdweb;
 using System.Threading.Tasks;
 
 public class LobbyView : MonoBehaviour
@@ -10,11 +11,17 @@ public class LobbyView : MonoBehaviour
     [SerializeField]
     Request_LobbyView baseRequest;
 
+    [Header("斷開連結")]
+    [SerializeField]
+    Button disconnect_Btn;
+
     [Header("用戶訊息")]
     [SerializeField]
     Text walletAddress_Txt, balanceETH_Txt;
 
     [Header("現金房")]
+    [SerializeField]
+    GameObject cashRoomBtnSample;
     [SerializeField]
     RectTransform cashRoomParent;
     [SerializeField]
@@ -54,6 +61,13 @@ public class LobbyView : MonoBehaviour
     /// </summary>
     private void ListenerEvent()
     {
+        //斷開連接
+        disconnect_Btn.onClick.AddListener(() =>
+        {
+            WalletManager.Instance.OnWalletDisconnect();
+            LoadSceneManager.Instance.LoadScene(SceneEnum.Login);
+        });
+
         //積分房
         battle_Btn.onClick.AddListener(() =>
         {
@@ -88,6 +102,8 @@ public class LobbyView : MonoBehaviour
 
     private void Start()
     {
+        cashRoomBtnSample.SetActive(false);
+
         SetUserInfo();
         CreateRoom();
     }
@@ -114,13 +130,13 @@ public class LobbyView : MonoBehaviour
     private void CreateRoom()
     {
         //現金桌        
-        GameObject cashRoomBtnObj = AssetsManager.Instance.GetObjtypeAsset(ObjTypeEnum.CashRoomBtn);
         float cashRoomSpacing = cashRoomParent.GetComponent<HorizontalLayoutGroup>().spacing;
-        Rect cashRoomRect = cashRoomBtnObj.GetComponent<RectTransform>().rect;
+        Rect cashRoomRect = cashRoomBtnSample.GetComponent<RectTransform>().rect;
         cashRoomParent.sizeDelta = new Vector2((cashRoomRect.width + cashRoomSpacing) * GameDataManager.CashRoomSmallBlindList.Count, cashRoomRect.height);
         foreach (var smallBlind in GameDataManager.CashRoomSmallBlindList)
         {
-            RectTransform rt = Instantiate(cashRoomBtnObj).GetComponent<RectTransform>();
+            RectTransform rt = Instantiate(cashRoomBtnSample).GetComponent<RectTransform>();
+            rt.gameObject.SetActive(true);
             rt.SetParent(cashRoomParent);
             rt.GetComponent<CashRoomBtn>().SetCashRoomBtnInfo(smallBlind, this);
             rt.localScale = Vector3.one;
@@ -153,7 +169,7 @@ public class LobbyView : MonoBehaviour
     private void SetUserInfo()
     {
         walletAddress_Txt.text = $"Wallet Address : {GameDataManager.UserWalletAddress}";
-        balanceETH_Txt.text = $"ETH : {GameDataManager.UserWalletBalance}";
+        balanceETH_Txt.text = $"Balance : {GameDataManager.UserWalletBalance}";
     }
 
     /// <summary>
