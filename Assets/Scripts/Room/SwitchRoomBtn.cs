@@ -12,6 +12,8 @@ public class SwitchRoomBtn : MonoBehaviour
     [SerializeField]
     RectTransform selectFrame_Tr;
 
+    public int BtnIndex { get; set; }
+
     /// <summary>
     /// 設置選擇按鈕激活狀態
     /// </summary>
@@ -26,19 +28,15 @@ public class SwitchRoomBtn : MonoBehaviour
     /// <summary>
     /// 設置切換房間按鈕訊息
     /// </summary>
-    /// <param name="controlTr"></param>
+    /// <param name="btnStr"></param>
     /// <param name="roomName"></param>
-    public void SetSwitchBtnInfo(RectTransform controlTr, string roomName)
+    public void SetSwitchBtnInfo(string btnStr, string roomName, int btnIndex)
     {
-        roomName_Txt.text = roomName;
+        BtnIndex = btnIndex;
+        roomName_Txt.text = btnStr;
         thisBtn.onClick.AddListener(() =>
         {
-            controlTr.SetSiblingIndex(GameRoomManager.Instance.GetRoomCount + 1);
-            GameRoomManager.Instance.CloseAllBtnFrame();
-            GameRoomManager.Instance.IsShowGameRoom = true;
-            SetSelectFrameActive = true;
-
-            Entry.CurrGameServer = controlTr.GetComponent<GameServer>();
+            GameRoomManager.Instance.SwitchBtnClick(btnIndex);
         });
     }
 }
