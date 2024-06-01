@@ -273,7 +273,7 @@ public class LoginView : MonoBehaviour
     {
         string authUrl = $"https://api.instagram.com/oauth/authorize?" +
                          $"client_id={DataManager.IGClientId}&" +
-                         $"redirect_uri={DataManager.TestRedirectUri}&" +
+                         $"redirect_uri={DataManager.RedirectUri}&" +
                          $"scope=user_profile,user_media&" +
                          $"response_type=code";
 
