@@ -22,7 +22,7 @@ public class LoginView : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void JS_WindowClose();                                                 //關閉頁面
     [DllImport("__Internal")]
-    private static extern void JS_OpenNewBrowser(string mail, string igidAndName);               //開啟新瀏覽器
+    private static extern void JS_OpenNewBrowser(string mail, string igIdAndName);          //開啟新瀏覽器
 
     [Header("錢包連接")]
     [SerializeField]
@@ -106,7 +106,7 @@ public class LoginView : MonoBehaviour
 
         if (DataManager.IsMobilePlatform)
         {
-            JS_GetBrowserInfo();
+            //JS_GetBrowserInfo();
         }
 
         //已有Line Mail
