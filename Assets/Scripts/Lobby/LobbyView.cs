@@ -98,6 +98,10 @@ public class LobbyView : MonoBehaviour
         Color tipColor = tip_Txt.color;
         tipColor.a = 0;
         tip_Txt.color = tipColor;
+
+#if !UNITY_EDITOR
+        WalletManager.Instance.StartCheckConnect();
+#endif
     }
 
     private void Start()
@@ -225,5 +229,10 @@ public class LobbyView : MonoBehaviour
 
         tipColor.a = 0;
         tip_Txt.color = tipColor;
+    }
+
+    private void OnDestroy()
+    {
+        WalletManager.Instance.CancelCheckConnect();
     }
 }
