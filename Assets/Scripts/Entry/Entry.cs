@@ -39,8 +39,6 @@ public class Entry : UnitySingleton<Entry>
 
     private IEnumerator Start()
     {
-        Debug.Log("Jimmy Test2");
-
         LanguageManager.Instance.LoadLangageJson();
 
         yield return AssetsManager.Instance.ILoadAssets();
