@@ -50,7 +50,8 @@ public class LoginView : MonoBehaviour
         //IG登入
         ig_Btn.onClick.AddListener(() =>
         {
-            StartIGLogin();
+            //StartIGLogin();
+            StartInstagram();
         });
 
         //Line登入
@@ -168,6 +169,19 @@ public class LoginView : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 開始Instagram登入
+    /// </summary>
+    public void StartInstagram()
+    {
+        string authUrl = $"https://api.instagram.com/oauth/authorize?client_id=" +
+                         $"{DataManager.InstagramChannelID}&redirect_uri={DataManager.InstagramRedirectUri}" +
+                         $"&scope=user_profile,user_media&response_type=code";
+        Application.OpenURL(authUrl);
+    }
+
+
 
     #region ThirdWallet
 
