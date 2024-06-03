@@ -39,7 +39,7 @@ public class Entry : UnitySingleton<Entry>
 
     private IEnumerator Start()
     {
-        Debug.Log("Jimmy Test");
+        Debug.Log("Jimmy Test2");
 
         LanguageManager.Instance.LoadLangageJson();
 
