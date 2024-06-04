@@ -145,6 +145,24 @@ public class Entry : UnitySingleton<Entry>
     }
 
     #region Instagram登入
+
+    /// <summary>
+    /// 接收獲取IG用戶訊息
+    /// </summary>
+    /// <param name="mail"></param>
+    public void ReceiveIGInfo(string info)
+    {
+        Debug.Log($"Get IG Info:{info}");
+        DataManager.IGIUserIdAndName = info;
+    }
+
+    [System.Serializable]
+    public class IGUserInfo
+    {
+        public string id;
+        public string username;
+    }
+
     /// <summary>
     /// Instagram 登入回傳
     /// </summary>
@@ -223,97 +241,6 @@ public class Entry : UnitySingleton<Entry>
             }
         }
 
-    }
-    #endregion
-
-
-
-    #region IG
-
-    /// <summary>
-    /// 接收獲取IG用戶訊息
-    /// </summary>
-    /// <param name="mail"></param>
-    public void ReceiveIGInfo(string info)
-    {
-        Debug.Log($"Get IG Info:{info}");
-        DataManager.IGIUserIdAndName = info;
-    }
-
-    [System.Serializable]
-    public class IGUserInfo
-    {
-        public string id;
-        public string username;
-    }
-    /// <summary>
-    /// IG登入回傳
-    /// </summary>
-    /// <param name="code"></param>
-    /*
-    public void OnIGLoginCallback(string code)
-    {
-        StartCoroutine(IGetIGAccessToken(code));
-    }
-    */
-    /// <summary>
-    /// 獲取IGToken
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator IGetIGAccessToken(string authorizationCode)
-    {
-        Debug.Log($"IG Code:{authorizationCode}");
-
-        WWWForm form = new WWWForm();
-        form.AddField("client_id", DataManager.IGClientId);
-        form.AddField("client_secret", DataManager.IGSecret);
-        form.AddField("grant_type", "authorization_code");
-        form.AddField("redirect_uri", DataManager.RedirectUri);
-        form.AddField("code", authorizationCode);
-
-        UnityWebRequest www = UnityWebRequest.Post("https://api.instagram.com/oauth/access_token", form);
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.LogError(www.error);
-        }
-        else
-        {
-            string responseText = www.downloadHandler.text;
-            Debug.Log($"IG ResponseText:{responseText}");
-            string accessToken = responseText.Split('"')[3];
-            yield return IGetIGUserInfo(accessToken);
-        }
-    }
-    /// <summary>
-    /// 獲取IG用戶訊息
-    /// </summary>
-    /// <param name="accessToken"></param>
-    /// <returns></returns>
-    private IEnumerator IGetIGUserInfo(string accessToken)
-    {
-        UnityWebRequest www = UnityWebRequest.Get($"https://graph.instagram.com/me?fields=id,username&access_token={accessToken}");
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.LogError(www.error);
-        }
-        else
-        {
-            string responseText = www.downloadHandler.text;
-            IGUserInfo userInfo = JsonUtility.FromJson<IGUserInfo>(responseText);
-            if (userInfo != null)
-            {
-                // Display user information
-                DataManager.IGIUserIdAndName = $"ID: {userInfo.id}\nUsername: {userInfo.username}";
-            }
-            else
-            {
-                Debug.LogError("Failed to parse user info.");
-            }
-        }
     }
 
     #endregion
