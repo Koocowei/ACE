@@ -41,8 +41,6 @@ public class LobbyView : MonoBehaviour
 
     Coroutine tipCorutine;
 
-    public Button bb;
-
     /// <summary>
     /// 更新文本翻譯
     /// </summary>
@@ -73,11 +71,6 @@ public class LobbyView : MonoBehaviour
     /// </summary>
     private void ListenerEvent()
     {
-        bb.onClick.AddListener(() =>
-        {
-            LanguageManager.Instance.ChangeLanguage(1);
-        });
-
         //斷開連接
         disconnect_Btn.onClick.AddListener(() =>
         {
