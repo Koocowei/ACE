@@ -6,9 +6,9 @@ using UnityEngine;
 public class AudioPool
 {
     Transform thisTransform;        //音效池父物件
-        
-    Dictionary<GameObject, AudioSource> audioDic;               //音效池
-    int cleanNum;                                               //清理音效池數量
+
+    readonly Dictionary<GameObject, AudioSource> audioDic;               //音效池
+    readonly int cleanNum;                                               //清理音效池數量
 
     public AudioPool(Transform parent, int cleanNum = 10)
     {
@@ -27,6 +27,10 @@ public class AudioPool
     public void PlaySound(string soundName)
     {
         AudioClip sound = AudioManager.Instance.GetSound(soundName);
+        if (sound == null)
+        {
+            return;
+        }
 
         foreach (var audio in audioDic)
         {

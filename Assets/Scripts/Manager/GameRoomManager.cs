@@ -28,6 +28,10 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
     [SerializeField]
     RectTransform switchBtnParent, addRoomBtn_Tr;
 
+    [Header("背景遮罩")]
+    [SerializeField]
+    GameObject bgMask_Obj;
+
     public readonly int maxRoomCount = 2;
     public readonly float moveTargetDictance = 108;     //移動房間所需移動距離
 
@@ -113,6 +117,8 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
         thisData.SwitchBtnIndexList = new List<int>();
         thisData.SwitchBtnList = new List<SwitchRoomBtn>();
 
+        bgMask_Obj.SetActive(false);
+
         switchBtnSample.gameObject.SetActive(false);
         StartCoroutine(IJudgeShowSwitchBtn());
     }
@@ -145,6 +151,7 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
     /// </summary>
     private void OnGoLobby()
     {
+        bgMask_Obj.SetActive(false);
         IsShowGameRoom = false;
         CloseAllBtnFrame();
     }
@@ -272,15 +279,16 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
         SwitchRoomBtn switchRoomBtn = switchBtnObj.GetComponent<SwitchRoomBtn>();
         switchRoomBtn.SetSwitchBtnInfo(GetRoomName(roomType), roomName, thisData.RoomNameIndex);
         switchRoomBtn.SetSelectFrameActive = true;
+
         thisData.SwitchBtnList.Add(switchRoomBtn);
-
-
         thisData.SwitchBtnIndexList.Add(thisData.RoomNameIndex);
         thisData.CurrRoomIndex = GetRoomCount;
         thisData.RoomNameIndex++;
         thisData.RoomDic.Add(roomName, (room, switchRoomBtn));
 
         addRoomBtn_Tr.SetSiblingIndex(GetRoomCount + 1);
+
+        bgMask_Obj.SetActive(true);
 
         StartCoroutine(IJudgeShowSwitchBtn());
     }
@@ -305,6 +313,7 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
         else
         {
             Debug.LogError($"{roomName}:移除房間出錯");
+            return;
         }
 
         foreach (var room in thisData.RoomDic)
@@ -326,6 +335,8 @@ public class GameRoomManager : UnitySingleton<GameRoomManager>
         swtichBtnCanvas.sortingOrder = GetRoomCount > 0 ?
                                        50 :
                                        -1;
+
+        bgMask_Obj.SetActive(GetRoomCount > 0);
 
         //切換按鈕空間大小
         float sizeX = (GetRoomCount + 1) * thisData.AddSwitchBtnParnetWidth;

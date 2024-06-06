@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 public class AudioManager : UnitySingleton<AudioManager>
 {
-    Dictionary<string, AudioClip> soundDic = new Dictionary<string, AudioClip>();
-    Dictionary<string, AudioClip> musicDic = new Dictionary<string, AudioClip>();
+    readonly Dictionary<string, AudioClip> soundDic = new();
+    readonly Dictionary<string, AudioClip> musicDic = new();
 
     AudioPool audioPool;
 
@@ -81,7 +81,7 @@ public class AudioManager : UnitySingleton<AudioManager>
         }
         else
         {
-            Debug.LogError($"{soundName} AodioSource Not Find!!!");
+            Debug.LogError($"{soundName} Sound Not Find!!!");
             return null;
         }
     }
@@ -99,7 +99,7 @@ public class AudioManager : UnitySingleton<AudioManager>
         }
         else
         {
-            Debug.LogError($"{musicName} AodioSource Not Find!!!");
+            Debug.LogError($"{musicName} Music Not Find!!!");
             return null;
         }
     }
