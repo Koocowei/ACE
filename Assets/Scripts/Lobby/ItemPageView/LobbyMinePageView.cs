@@ -13,7 +13,7 @@ public class LobbyMinePageView : MonoBehaviour
     [SerializeField]
     Button EditorAvatar_Btn, CopyWalletAddress_Btn;
     [SerializeField]
-    Text NickName_Txt, WalletAddress_Txt;
+    Text Nickname_Txt, WalletAddress_Txt;
 
     [Header("更換頭像")]
     [SerializeField]
@@ -112,11 +112,11 @@ public class LobbyMinePageView : MonoBehaviour
         //頭像
         EditorAvatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatar];
 
+        //暱稱
+        Nickname_Txt.text = DataManager.UserNickname;
+
         //錢包地址
-        string walletAddress = string.IsNullOrEmpty(DataManager.UserWalletAddress) || DataManager.UserWalletAddress.Length < 22 ?
-                               DataManager.UserWalletAddress :
-                               DataManager.UserWalletAddress.Substring(0, 22) + "...";
-        StringUtils.StrExceedSize(walletAddress, WalletAddress_Txt);
+        StringUtils.StrExceedSize(DataManager.UserWalletAddress, WalletAddress_Txt);
 
         //產生選擇的頭像
         avatarBtnList = new List<Button>();
