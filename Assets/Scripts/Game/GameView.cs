@@ -535,9 +535,7 @@ public class GameView : MonoBehaviour
         if (isShow == true)
         {
             MenuBg_Tr.anchoredPosition = new Vector2(-MenuBg_Tr.rect.width, 0);
-            MenuWalletAddr_Txt.text = string.IsNullOrEmpty(DataManager.UserWalletAddress) ?
-                                      "" :
-                                      DataManager.UserWalletAddress.ShortenAddress();
+            StringUtils.StrExceedSize(DataManager.UserWalletAddress, MenuWalletAddr_Txt);
         }
 
         GameRoomManager.Instance.IsCanMoveSwitch = !isShow;

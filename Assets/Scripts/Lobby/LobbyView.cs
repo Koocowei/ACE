@@ -79,6 +79,12 @@ public class LobbyView : MonoBehaviour
     /// </summary>
     private void ListenerEvent()
     {
+        //頭像按鈕
+        Avatar_Btn.onClick.AddListener(() =>
+        {
+            OpenItemPage(ItemType.Mine);
+        });
+
         //顯示用戶資源列表
         ShowAssets_Btn.onClick.AddListener(() =>
         {
@@ -140,7 +146,9 @@ public class LobbyView : MonoBehaviour
         OpenItemPage(ItemType.Main);
 
 #if !UNITY_EDITOR
+
         WalletManager.Instance.StartCheckConnect();
+
 #endif
     }
 
@@ -219,7 +227,7 @@ public class LobbyView : MonoBehaviour
     /// <summary>
     /// 更新用戶訊息
     /// </summary>
-    private void UpdateUserInfo()
+    public void UpdateUserInfo()
     {
         Avatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatar];
         Stamina_Txt.text = $"{DataManager.UserEnergy}/50";
