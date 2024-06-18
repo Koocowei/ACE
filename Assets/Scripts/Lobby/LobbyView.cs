@@ -43,6 +43,14 @@ public class LobbyView : MonoBehaviour
     [SerializeField]
     GameObject LobbyMainPageView, LobbyMinePageView;
 
+
+    [Header("任務介面")]
+    [SerializeField]
+    RectTransform Floor4;
+    [SerializeField]
+    GameObject QuestView;
+    
+
     /// <summary>
     /// 項目按鈕類型
     /// </summary>
@@ -125,6 +133,9 @@ public class LobbyView : MonoBehaviour
         });
 
         #endregion
+
+        
+
     }
 
     private void OnEnable()
@@ -158,6 +169,13 @@ public class LobbyView : MonoBehaviour
                 EndPair();
             }
         }
+
+        //  任務生成測試
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            DisplayQuestUI();
+        }
+
 
 #if UNITY_EDITOR
 
@@ -299,6 +317,22 @@ public class LobbyView : MonoBehaviour
         tipColor.a = 0;
         Tip_Txt.color = tipColor;
     }
+
+    /// <summary>
+    /// 開啟任務介面
+    /// </summary>
+    public void DisplayQuestUI()
+    {
+        if (Floor4.childCount < 1)
+        {
+            Instantiate(QuestView, Floor4);
+        }
+        else
+        {
+            Floor4.gameObject.SetActive(!Floor4.gameObject.activeSelf);
+        }
+    }
+
 
     private void OnDestroy()
     {
