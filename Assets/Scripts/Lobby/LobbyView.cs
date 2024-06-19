@@ -139,9 +139,6 @@ public class LobbyView : MonoBehaviour
         });
 
         #endregion
-
-        
-
     }
 
     private void OnEnable()
@@ -154,13 +151,7 @@ public class LobbyView : MonoBehaviour
         SetIsShowAssetList = isShowAssetList;
 
         UpdateUserInfo();
-        OpenItemPage(ItemType.Main);
-
-#if !UNITY_EDITOR
-
-        WalletManager.Instance.StartCheckConnect();
-
-#endif
+        OpenItemPage(ItemType.Main);        
     }
 
     private void Start()

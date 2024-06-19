@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class NFTSample : MonoBehaviour
 {
@@ -14,12 +15,24 @@ public class NFTSample : MonoBehaviour
     /// 設置NFT
     /// </summary>
     /// <param name="data"></param>
-    async public void SetNFT(NFTData data)
+    /// <param name="index"></param>
+    async public void SetNFT(NFTData data, int index)
     {
+        //時間
+        DateTime dateTime = DateTime.ParseExact(data.updated_at, "yyyy-MM-ddTHH:mm:ss.ffffff", null);
+        Date_Txt.text = dateTime.ToString("yyyy-MM-dd HH:mm");
+        //名稱
         NFTName_Txt.text = data.name;
-        Date_Txt.text = data.date;
+        //稀有度
         Rarity_Txt.text = $"Rarity {data.rarity}%";
-        Describe_Txt.text = data.describe;
-        NFT_Image.sprite = await Utils.ImageUrlToSprite(data.imgUrl) as Sprite;
+        //說明
+        Describe_Txt.text = string.IsNullOrEmpty(data.description) ?
+                            "No description." :
+                            data.description;
+        //圖像
+        if (NFTManager.Instance.NFTImageList[index] != null)
+        {
+            NFT_Image.sprite = NFTManager.Instance.NFTImageList[index];
+        }        
     }
 }
