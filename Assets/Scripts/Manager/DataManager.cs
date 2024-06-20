@@ -57,6 +57,9 @@ public static class DataManager
         200, 400, 800, 1000,
     };
 
+    [Header("NFT")]
+    public static string NFTApiKey = "3ba7e50212234586a43a5d9ac50b7cd0";
+
     //  每日任務資料
     public static List<QuestInfo> DailyQuestList = new List<QuestInfo>
     {
@@ -81,4 +84,130 @@ public static class DataManager
         new QuestInfo(){ QuestName = "Cash Bet 6000 Amount",GetPoint = 600,FinishProgress = 6000,CurrentProgress = 0,GetCoin = 10000},
     };
 
+    [Header("排名")]
+    public static List<RankData> CurrSeasonIntegralRankList;                //當季積分排名
+    public static List<RankData> CurrSeasonCashRankList;                    //當季Cash排名
+    public static List<RankData> CurrSeasonGoldenRankList;                  //當季Golden排名
+    public static List<RankData> PreSeasonIntegralRankList;                 //前季積分排名
+    public static List<RankData> PreSeasonCashRankList;                     //前季Cash排名
+    public static List<RankData> PreSeasonGoldenRankList;                   //前季Golden排名
+    public static DateTime RandEndDate;                                     //賽季結束日期
+    public static int CurrRankSeason;                                       //當前賽季
+    public static RankData LocalUserRankData;                               //本地玩家排名資料
+
+    /// <summary>
+    /// 接收排名資料
+    /// </summary>
+    public static void ReciveRankData()
+    {
+        CurrRankSeason = 2;
+
+        //賽季剩餘時間(分)
+        int timeLest = 144000;
+        RandEndDate = DateTime.Now.AddMinutes(timeLest);
+
+        //本地玩家排名
+        LocalUserRankData = new RankData() { rank = 1001, point = 5, award = 5};
+
+        //當季積分排名
+        CurrSeasonIntegralRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "AA", point = 1000, award = 100 },
+            new RankData() { avatar = 1, nickname = "BB", point = 950, award = 90 },
+            new RankData() { avatar = 2, nickname = "CC", point = 900, award = 80 },
+            new RankData() { avatar = 3, nickname = "DD", point = 850, award = 70 },
+            new RankData() { avatar = 4, nickname = "EE", point = 800, award = 60 },
+            new RankData() { avatar = 5, nickname = "FF", point = 750, award = 60 },
+            new RankData() { avatar = 6, nickname = "GG", point = 700, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 650, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 600, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 550, award = 60 },
+            new RankData() { avatar = 4, nickname = "KK", point = 450, award = 40 },
+        };
+        PreSeasonIntegralRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "OO", point = 1230, award = 100 },
+            new RankData() { avatar = 1, nickname = "BB", point = 950, award = 90 },
+            new RankData() { avatar = 2, nickname = "PP", point = 900, award = 80 },
+            new RankData() { avatar = 3, nickname = "DD", point = 850, award = 70 },
+            new RankData() { avatar = 4, nickname = "YY", point = 800, award = 60 },
+            new RankData() { avatar = 5, nickname = "FF", point = 750, award = 60 },
+            new RankData() { avatar = 6, nickname = "LL", point = 700, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 650, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 600, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 550, award = 60 },
+            new RankData() { avatar = 4, nickname = "KK", point = 450, award = 40 },
+        };
+
+        //當季Cash排名
+        CurrSeasonCashRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "ZZ", point = 1100, award = 100 },
+            new RankData() { avatar = 1, nickname = "BB", point = 1000, award = 90 },
+            new RankData() { avatar = 2, nickname = "AA", point = 900, award = 80 },
+            new RankData() { avatar = 3, nickname = "DD", point = 880, award = 70 },
+            new RankData() { avatar = 4, nickname = "EE", point = 800, award = 60 },
+            new RankData() { avatar = 5, nickname = "FF", point = 780, award = 60 },
+            new RankData() { avatar = 6, nickname = "UU", point = 710, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 650, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 630, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 550, award = 60 },
+            new RankData() { avatar = 4, nickname = "PP", point = 455, award = 40 },
+        };
+        //前季Cash排名
+        PreSeasonCashRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "AA", point = 1005, award = 100 },
+            new RankData() { avatar = 1, nickname = "BB", point = 1000, award = 90 },
+            new RankData() { avatar = 2, nickname = "AA", point = 900, award = 80 },
+            new RankData() { avatar = 3, nickname = "TT", point = 880, award = 70 },
+            new RankData() { avatar = 4, nickname = "EE", point = 800, award = 60 },
+            new RankData() { avatar = 5, nickname = "FF", point = 780, award = 60 },
+            new RankData() { avatar = 6, nickname = "UU", point = 710, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 650, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 630, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 550, award = 60 },
+            new RankData() { avatar = 4, nickname = "PP", point = 455, award = 40 },
+        };
+
+        //當季Golden排名
+        CurrSeasonGoldenRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "XX", point = 2000, award = 100 },
+            new RankData() { avatar = 1, nickname = "AA", point = 1500, award = 90 },
+            new RankData() { avatar = 2, nickname = "BB", point = 900, award = 80 },
+            new RankData() { avatar = 3, nickname = "DD", point = 870, award = 70 },
+            new RankData() { avatar = 4, nickname = "EE", point = 830, award = 60 },
+            new RankData() { avatar = 5, nickname = "FF", point = 770, award = 60 },
+            new RankData() { avatar = 6, nickname = "YY", point = 730, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 670, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 630, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 530, award = 60 },
+            new RankData() { avatar = 4, nickname = "RR", point = 450, award = 40 },
+        };
+        //前季Golden排名
+        PreSeasonGoldenRankList = new List<RankData>()
+        {
+            new RankData() { avatar = 0, nickname = "LL", point = 2500, award = 100 },
+            new RankData() { avatar = 1, nickname = "AA", point = 1500, award = 90 },
+            new RankData() { avatar = 2, nickname = "SS", point = 1000, award = 80 },
+            new RankData() { avatar = 3, nickname = "DD", point = 870, award = 70 },
+            new RankData() { avatar = 4, nickname = "EE", point = 830, award = 60 },
+            new RankData() { avatar = 5, nickname = "YY", point = 770, award = 60 },
+            new RankData() { avatar = 6, nickname = "YY", point = 730, award = 60 },
+            new RankData() { avatar = 7, nickname = "HH", point = 670, award = 60 },
+            new RankData() { avatar = 6, nickname = "II", point = 630, award = 60 },
+            new RankData() { avatar = 5, nickname = "JJ", point = 530, award = 60 },
+            new RankData() { avatar = 4, nickname = "RR", point = 450, award = 40 },
+        };
+    }
+}
+
+public class RankData
+{
+    public int rank;
+    public int avatar;
+    public string nickname;
+    public int point;
+    public int award;
 }
