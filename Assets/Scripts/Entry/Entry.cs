@@ -71,8 +71,8 @@ public class Entry : UnitySingleton<Entry>
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-           // DataManager.UserWalletAddress = "0xef279977cBC232C667082E06cfC252529513B738";
-           // NFTManager.Instance.UpdateNFT();
+            DataManager.UserWalletAddress = "0xef279977cBC232C667082E06cfC252529513B738";
+            NFTManager.Instance.UpdateNFT();
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad7))
