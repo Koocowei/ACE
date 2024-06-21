@@ -45,14 +45,15 @@ public static class DataManager
     public static double UserGoldChips{ get; set; }                 //用戶Gold籌碼
 
     [Header("大廳")]
-    public static int MaxStaminaValue = 50;                                     //最大耐力值
-    public static int MinMagnification = 40;                                    //購買籌碼最小倍率
-    public static int MaxMagnification = 200;                                   //購買籌碼最大倍率
-    public static List<double> CryptoSmallBlindList = new List<double>          //加密貨幣桌小盲值
+    public static int CurrBillboardIndex { get; set; }                                            //當前廣告刊版Index
+    public static int MaxStaminaValue { get { return 50; } }                                      //最大耐力值
+    public static int MinMagnification { get { return 40; } }                                     //購買籌碼最小倍率
+    public static int MaxMagnification { get { return 200; } }                                    //購買籌碼最大倍率
+    public static List<double> CryptoSmallBlindList = new List<double>                            //加密貨幣桌小盲值
     {
         50, 100, 200, 400,
     };
-    public static List<double> VCSmallBlindList = new List<double>              //虛擬貨幣桌小盲值
+    public static List<double> VCSmallBlindList = new List<double>                                //虛擬貨幣桌小盲值
     {
         200, 400, 800, 1000,
     };
