@@ -44,8 +44,10 @@ body {
     padding-bottom: 20px; /* Space from the bottom of the screen */
 }
 #unity-logo {
-    text-align: center;
-    margin-bottom: 10px;
+    width: 180px;
+    height: 130px;
+    background: url('asia-poker-logo.png') no-repeat center;
+    background-size: cover;
 }
 #unity-logo img {
     max-width: 8%;
