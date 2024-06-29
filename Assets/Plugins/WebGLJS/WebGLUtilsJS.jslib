@@ -1,7 +1,7 @@
 mergeInto(LibraryManager.library, {
 
     //複製文字
-    JS_CopyText: function (strPtr) {
+    JS_CopyString: function (strPtr) {
         var str = UTF8ToString(strPtr);
         var textarea = document.createElement("textarea");
         textarea.value = str;
