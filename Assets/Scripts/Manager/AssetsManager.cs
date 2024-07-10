@@ -23,10 +23,13 @@ public class AssetsManager : UnitySingleton<AssetsManager>
         {AlbumEnum.PasswordCheck, "SpriteAlbum/CheckPasswordAlbum" },                                   //檢查密碼正確性圖集
         {AlbumEnum.AvatarAlbum, "SpriteAlbum/AvatarAlbum" },                                            //頭像圖集
         {AlbumEnum.ArrowAlbum, "SpriteAlbum/ArrowAlbum" },                                              //箭頭圖集
-        {AlbumEnum.BonusRocketAlbum,"SpriteAlbum/BonusRocketAlbum" },                                   //Bonus火箭圖集
+        {AlbumEnum.BonusRocketAlbum,"SpriteAlbum/BonusRocketAlbum" },                                   //紅利火箭圖集
         {AlbumEnum.LinkAlbum, "SpriteAlbum/LinkAlbum" },                                                //連接圖集
         {AlbumEnum.TransactionStatusAlbum, "SpriteAlbum/TransactionStatusAlbum" },                      //交易狀態圖集
         {AlbumEnum.BillboardAlbum, "SpriteAlbum/BillboardAlbum" },                                      //廣告刊版圖集
+        {AlbumEnum.Shop_Stamina,"SpriteAlbum/Shop_StaminaAlbum"},                                       //商店耐力道具圖集
+        {AlbumEnum.Shop_Gold,"SpriteAlbum/Shop_GoldAlbum"},                                             //商店金幣道具圖集
+        {AlbumEnum.Shop_ExtraTime,"SpriteAlbum/Shop_ExtraTimeAlbum"},                                   //商店加時道具圖集
     };
 
     public override void Awake()
