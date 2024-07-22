@@ -30,6 +30,11 @@
     "zh_TW": "一次性代碼"
   },
   {
+    "ID": "RESEND",
+    "English": "RESEND",
+    "zh_TW": "重發"
+  },
+  {
     "ID": "SEND CODE",
     "English": "SEND CODE",
     "zh_TW": "傳送代碼"
