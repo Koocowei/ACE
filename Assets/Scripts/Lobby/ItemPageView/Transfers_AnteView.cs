@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Transfers_AnteView : MonoBehaviour
 {
@@ -19,10 +20,14 @@ public class Transfers_AnteView : MonoBehaviour
     Button SumbitBtn;
     [SerializeField]
     GameObject AnteView, AnteSuccessView;
+    [SerializeField]
+    TextMeshProUGUI AnteAmount;
 
     [Header("贖回介面")]
     [SerializeField]
     Button RedeemBtn;
+    [SerializeField]
+    TextMeshProUGUI EstimatedAmount;
 
 
 
@@ -49,6 +54,7 @@ public class Transfers_AnteView : MonoBehaviour
         {
             AnteView.SetActive(!AnteView.activeSelf);
             AnteSuccessView.SetActive(!AnteSuccessView.activeSelf);
+            EstimatedAmount.text = AnteAmount.text;
         });
 
     }
