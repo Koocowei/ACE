@@ -4895,6 +4895,7 @@ MonoBehaviour:
   Floor4: {fileID: 2597165869620148159}
   QuestView: {fileID: 2916295124333432222, guid: 283920420f2c80d4b9b4945f925ddf2a, type: 3}
   SetNicknameViewObj: {fileID: 6043452908557475935, guid: 175ae92ef0320254b9b25a2c371a3300, type: 3}
+  Transfers_AnteView: {fileID: 2916295124333432222, guid: 143a68c49d5fcdc4f88e1cb78587d1ea, type: 3}
 --- !u!114 &113325593723988352
 MonoBehaviour:
   m_ObjectHideFlags: 0
