@@ -6,20 +6,19 @@ using UnityEngine.Events;
 
 public class PokerWinRateCalculator
 {
-    // 玩家手牌
+    //模擬次數
+    private const int simulationCount = 15000;
+    //玩家手牌
     private List<int> playerHand;
-    // 公共牌
+    //公共牌
     private List<int> communityCards;
-    // 剩余牌
+    //剩餘牌
     private List<int> deck;
-    // 模拟次数
-    private int simulationCount;
 
-    public PokerWinRateCalculator(List<int> playerHand, List<int> communityCards, int simulationCount = 10000)
+    public PokerWinRateCalculator(List<int> playerHand, List<int> communityCards)
     {
         this.playerHand = playerHand;
         this.communityCards = communityCards;
-        this.simulationCount = simulationCount;
         this.deck = InitializeDeck(playerHand, communityCards);
     }
 

@@ -94,7 +94,7 @@ public class Entry : UnitySingleton<Entry>
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            //Test();
+            Test();
         }
     }
 

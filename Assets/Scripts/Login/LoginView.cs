@@ -1059,7 +1059,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         Connecting_Obj.SetActive(true);
         RetryConnectWallet_Obj.SetActive(false);
 
-        ConnectionTitle_Txt.text = $"{LanguageManager.Instance.GetText("Log In Using In Usingsing")} {walletEnum}";
+        ConnectionTitle_Txt.text = $"{LanguageManager.Instance.GetText("Log In Using")} {walletEnum}";
         Connecting_Txt.text = $"{LanguageManager.Instance.GetText("Load Into")} {walletEnum}";
         ConnectingLogo_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.WalletLogoAlbum).album[(int)walletEnum];
         connectionEffectCoroutine = StartCoroutine(IConnectionEffect());
