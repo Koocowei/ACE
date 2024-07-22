@@ -253,8 +253,8 @@ public class TransactionHistoryView : MonoBehaviour
             }
             isAllTypeExpand = false;
             isAllSatusExpand = false;
-            AllTypeExpand_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[1];
-            AllStatusExpand_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[1];
+            AllTypeExpand_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[3];
+            AllStatusExpand_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[3];
         });
 
         //篩選遮罩按鈕
@@ -721,8 +721,8 @@ public class TransactionHistoryView : MonoBehaviour
         contentObj.gameObject.SetActive(isExpand);
         rt.sizeDelta = new Vector2(rt.rect.width, targetHeight);
         img.sprite = isExpand == true ?
-                     AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[0] :
-                     AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[1];
+                     AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[1] :
+                     AssetsManager.Instance.GetAlbumAsset(AlbumEnum.ArrowAlbum).album[3];
 
         completeCallback?.Invoke();
     }
