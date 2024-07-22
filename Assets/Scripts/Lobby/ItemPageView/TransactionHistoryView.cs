@@ -663,7 +663,7 @@ public class TransactionHistoryView : MonoBehaviour
             page = 1;
         }
         currPage = page;
-        CurrPage_Txt.text = $"{page} {LanguageManager.Instance.GetText("OF")} {maxPages}";
+        CurrPage_Txt.text = $"<color=#E5F2FF>{page}</color><color=#858BAD> {LanguageManager.Instance.GetText("OF")} {maxPages}</color>";
 
         List<TransactionHistoryData> getData = filterData.Skip((page - 1) * 10).Take(10).ToList();
         if (getData.Count == 0)
