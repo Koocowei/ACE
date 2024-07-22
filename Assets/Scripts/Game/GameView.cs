@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
+using System.Threading.Tasks;
 
 using RequestBuf;
 
@@ -1520,7 +1521,6 @@ public class GameView : MonoBehaviour
                 thisData.IsPlaying = true;
                 player.SetHandPoker(dic.Value.Item1,
                                     dic.Value.Item2);
-
                 JudgePokerShape(player, true);
             }
             else
