@@ -135,9 +135,9 @@
     "zh_TW": "手牌"
   },
   {
-    "ID": "Loading",
-    "English": "Loading",
-    "zh_TW": "載入中"
+    "ID": "Now Loading...",
+    "English": "Now Loading...",
+    "zh_TW": "正在加載..."
   },
   {
     "ID": "Win",
