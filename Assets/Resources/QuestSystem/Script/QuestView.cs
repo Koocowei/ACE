@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class QuestView : MonoBehaviour
 {
@@ -29,11 +30,11 @@ public class QuestView : MonoBehaviour
     [Header("Button滑塊")]
     [SerializeField]
     GameObject MaskObject;
-    Text MaskText;
+    TextMeshProUGUI MaskText;
 
     private void Awake()
     {
-        MaskText = MaskObject.transform.GetChild(0).GetComponent<Text>();
+        MaskText = MaskObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         DailyBtn.onClick.AddListener(() =>
         {

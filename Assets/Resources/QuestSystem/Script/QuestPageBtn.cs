@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class QuestPageBtn : MonoBehaviour
 {
@@ -16,20 +17,20 @@ public class QuestPageBtn : MonoBehaviour
 
     [Header("任務名稱和報酬")]
     [SerializeField]
-    Text QuestName;
+    TextMeshProUGUI QuestName;
     [SerializeField]
-    Text CoinAmount;
+    TextMeshProUGUI CoinAmount;
 
     [Header("任務進程")]
     [SerializeField]
     GameObject schedule;
     [SerializeField]
-    Text QuestProgress;
+    TextMeshProUGUI QuestProgress;
 
 
     [Header("紅利Point Icon")]
     [SerializeField]
-    Sprite Pointicon;
+    TextMeshProUGUI PointAmount;
     [SerializeField]
     int BonusAmount;
 
@@ -40,11 +41,20 @@ public class QuestPageBtn : MonoBehaviour
     /// <param name="info">任物資料</param>
     public void SetQuestInfo(QuestInfo info)
     {
+        if (info.Received)
+        {
+            Received.SetActive(true);
+            return;
+        }
+        
+
         QuestName.text = info.QuestName;
         CoinAmount.text = $"* {info.GetCoin}";
         QuestProgress.text = $"{info.CurrentProgress}/{info.FinishProgress}";
+        PointAmount.text = $"+{info.GetPoint}";
 
         BonusAmount = info.GetPoint;
+
 
         //  任務完成後領取獎勵
         Receive.onClick.AddListener(() =>
