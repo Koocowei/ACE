@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 4681262733256527503}
   - component: {fileID: 6429981832471863243}
   m_Layer: 5
-  m_Name: SB
+  m_Name: SB_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -999,7 +999,7 @@ GameObject:
   - component: {fileID: 5400574311610966613}
   - component: {fileID: 7461498285993929343}
   m_Layer: 5
-  m_Name: BB
+  m_Name: BB_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2218,6 +2218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseRequest: {fileID: 8819878342560726024}
+  SB_Img: {fileID: 6429981832471863243}
+  BB_Img: {fileID: 7461498285993929343}
   BuyChips_Sli: {fileID: 1156752187251427586}
   Cancel_Btn: {fileID: 529893571240760427}
   Buy_Btn: {fileID: 6066299126894212644}
