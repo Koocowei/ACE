@@ -123,7 +123,7 @@ public class JoinRoomView : MonoBehaviour
         }
         Title_Txt.text = LanguageManager.Instance.GetText(titleStr);
 
-        SB_Txt.text = $"{StringUtils.SetChipsUnit(smallBlind)} /";
+        SB_Txt.text = $"{StringUtils.SetChipsUnit(smallBlind)}";
         BB_Txt.text = $"{StringUtils.SetChipsUnit(smallBlind * 2)}";
 
         TexasHoldemUtil.SetBuySlider(this.smallBlind, BuyChips_Sli, tableType);

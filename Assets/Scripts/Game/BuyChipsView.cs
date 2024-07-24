@@ -142,8 +142,8 @@ public class BuyChipsView : MonoBehaviour
         }
         Title_Txt.text = LanguageManager.Instance.GetText(titleStr);
 
-        SB_Txt.text = $"{smallBlind} /";
-        BB_Txt.text = $"{smallBlind * 2}";
+        SB_Txt.text = $"{StringUtils.SetChipsUnit(smallBlind)}";
+        BB_Txt.text = $"{StringUtils.SetChipsUnit(smallBlind * 2)}";
 
         thisData.SmallBlind = smallBlind;
 
