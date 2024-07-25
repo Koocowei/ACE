@@ -111,7 +111,7 @@ public static class DataManager
         new QuestInfo(){ QuestName = "Cash Bet 7000 Amount",GetPoint = 70,FinishProgress = 7000,CurrentProgress = 0,GetCoin = 7000, Received = false}
     };
     //  每周任務資料
-    public static List<QuestInfo> WeekQuestList = new List<QuestInfo>
+    public static List<QuestInfo> WeeklyQuestList = new List<QuestInfo>
     {
         new QuestInfo(){ QuestName = "Weekly Check-in",GetPoint = 100,FinishProgress = 7,CurrentProgress = 0,GetCoin = 50000, Received = false},
         new QuestInfo(){ QuestName = "Cash Bet 1000 Amount",GetPoint = 100,FinishProgress = 1000,CurrentProgress = 0,GetCoin = 5000, Received = false},
