@@ -51,7 +51,7 @@ public class LanguageManager
     /// <summary>
     /// 翻譯攔名稱
     /// </summary>
-    string[] languageId =
+    readonly string[] languageId =
     {
         "English",              //英文
         "zh_TW",                //繁體中文        
@@ -60,7 +60,7 @@ public class LanguageManager
     /// <summary>
     /// 更換語言顯示
     /// </summary>
-    public string[] languageShowName =
+    readonly public string[] languageShowName =
     {
         "English",              //英文
         "繁體中文"              //繁體中文
@@ -97,6 +97,15 @@ public class LanguageManager
     public class ThisData
     {
         public int CurrLanguageIndex;       //當前語言Index
+    }
+
+    /// <summary>
+    /// 獲取當前語言Index
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrLanguageIndex()
+    {
+        return thisData.CurrLanguageIndex;
     }
 
     /// <summary>

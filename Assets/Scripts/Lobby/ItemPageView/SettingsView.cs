@@ -41,6 +41,11 @@ public class SettingsView : MonoBehaviour
                                    LanguageManager.Instance.languageShowName.ToList());
     }
 
+    private void OnEnable()
+    {
+        Language_Dd.value = LanguageManager.Instance.GetCurrLanguageIndex();
+    }
+
     /// <summary>
     /// 事件聆聽
     /// </summary>

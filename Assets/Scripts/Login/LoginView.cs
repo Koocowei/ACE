@@ -441,8 +441,9 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             else
             {
                 RegisterNumberError_Txt.text = "";
-                string phone = StringUtils.GetPhoneAddCode(RegisterNumber_Dd, RegisterNumber_If.text);
-                Debug.Log($"Register Send Code:{phone}");
+                string phoneNumber = StringUtils.GetPhoneAddCode(RegisterNumber_Dd, RegisterNumber_If.text);
+                //FirebaseManager.Instance.SendOTP(phoneNumber);
+                Debug.Log($"Register Send Code:{phoneNumber}");
 
                 SetCodeCountDown();
             }

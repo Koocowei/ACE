@@ -37,10 +37,12 @@ public class Entry : UnitySingleton<Entry>
 
         #region 測試用
 
+        DataManager.UserId = "LocalUser";
         DataManager.UserCryptoChips = 11000;
         DataManager.UserVCChips = 230200;
+        DataManager.UserGoldChips = 65000;
         DataManager.UserStamina = 45;
-        DataManager.UserId = "LocalUser";
+        DataManager.UserOTProps = 8;
 
         #endregion
     }
