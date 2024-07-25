@@ -276,7 +276,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
-        LanguageManager.Instance.AddUpdateLanguageFunc(UpdateLanguage);
+        LanguageManager.Instance.AddUpdateLanguageFunc(UpdateLanguage, gameObject);
 
         recordConnect = new RecordConnect();
         ListenerEvent();

@@ -191,7 +191,7 @@ public class LobbyMinePageView : MonoBehaviour
 
     private void Awake()
     {
-        LanguageManager.Instance.AddUpdateLanguageFunc(UpdateLanguage);
+        LanguageManager.Instance.AddUpdateLanguageFunc(UpdateLanguage, gameObject);
         ListenerEvent();
 
         //錢包地址已複製文字
@@ -359,7 +359,11 @@ public class LobbyMinePageView : MonoBehaviour
         //開啟設定
         Settings_Btn.onClick.AddListener(() =>
         {
-            Instantiate(SettingsViewObj, transform);
+            LobbyView lobbyView = GameObject.FindFirstObjectByType<LobbyView>();
+            if (lobbyView != null)
+            {
+                Instantiate(SettingsViewObj, lobbyView.transform);
+            }
         });
 
         #endregion

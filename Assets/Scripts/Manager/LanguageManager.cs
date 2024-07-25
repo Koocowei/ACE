@@ -46,7 +46,7 @@ public class LanguageManager
     /// <summary>
     /// 紀錄更新語言方法
     /// </summary>
-    List<UnityAction> updateLanguageFuncList = new List<UnityAction>();
+    Dictionary<UnityAction, GameObject> updateLanguageFuncDic = new();
 
     /// <summary>
     /// 翻譯攔名稱
@@ -162,10 +162,11 @@ public class LanguageManager
     /// 添加更新語言方法
     /// </summary>
     /// <param name="updateFunc"></param>
-    public void AddUpdateLanguageFunc(UnityAction updateFunc)
+    /// <param name="obj"></param>
+    public void AddUpdateLanguageFunc(UnityAction updateFunc, GameObject obj)
     {
         updateFunc();
-        updateLanguageFuncList.Add(updateFunc);
+        updateLanguageFuncDic.Add(updateFunc, obj);
     }
 
     /// <summary>
@@ -174,9 +175,9 @@ public class LanguageManager
     /// <param name="func"></param>
     public void RemoveLanguageFun(UnityAction func)
     {
-        if (updateLanguageFuncList.Contains(func))
+        if (updateLanguageFuncDic.ContainsKey(func))
         {
-            updateLanguageFuncList.Remove(func);
+            updateLanguageFuncDic.Remove(func);
         }
         else
         {
@@ -191,9 +192,16 @@ public class LanguageManager
     {
         Debug.Log($"Change Language:{languageId[thisData.CurrLanguageIndex]}");
 
-        foreach (var func in updateLanguageFuncList)
+        foreach (var func in updateLanguageFuncDic)
         {
-            func?.Invoke();
+            if (func.Value != null)
+            {
+                func.Key?.Invoke();
+            }
+            else
+            {
+                Debug.LogError($"Update Language Error : {func.Value.name}");
+            }
         }
     }
 
