@@ -10,6 +10,46 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
         base.Awake();
     }
 
+    #region Firebase
+
+    [DllImport("__Internal")]
+    private static extern bool JS_GetRecaptchaToken(string action);
+    /// <summary>
+    /// 獲取Recaptcha Token
+    /// </summary>
+    /// <returns></returns>
+    public void GetRecaptchaToken()
+    {
+        JS_GetRecaptchaToken("send_otp");
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_SendOTPCode(string phoneNumber);
+    /// <summary>
+    /// 發送OTP
+    /// </summary>
+    /// <returns></returns>
+    public void SendOTPCode(string phoneNumber)
+    {
+        JS_SendOTPCode(phoneNumber);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_VerifyOTPCode(string code, string typeStr);
+    /// <summary>
+    /// 驗證OTP Code
+    /// </summary>
+    /// <param name="code">OTP Code</param>
+    /// <param name="typeStr">驗證類型判斷</param>
+    public void VerifyOTPCode(string code, string typeStr)
+    {
+        JS_VerifyOTPCode(code, typeStr);
+    }
+
+    #endregion
+
+    #region 錢包
+
     [DllImport("__Internal")]
     private static extern bool JS_WindowCheckWallet(string walletName);
     /// <summary>
@@ -33,6 +73,10 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     {
         return JS_OpenDownloadWallet(wallet.ToString());
     }
+
+    #endregion
+
+    #region 工具
 
     [DllImport("__Internal")]
     private static extern bool JS_Reload();
@@ -97,4 +141,6 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     {
         JS_CopyString(copyStr);
     }
+
+    #endregion
 }

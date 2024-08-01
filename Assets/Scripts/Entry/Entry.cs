@@ -30,7 +30,6 @@ public class Entry : UnitySingleton<Entry>
     [SerializeField] 
     GameObject ReporterObj;
 
-
     public override void Awake()
     {
         base.Awake();
@@ -97,31 +96,33 @@ public class Entry : UnitySingleton<Entry>
         if (Input.GetKeyDown(KeyCode.K))
         {
             //Test();
+            //StartCoroutine(GetSum(1, 1));
+
         }
     }
 
-   /* 獲勝機率測試 
-    public List<int> hands1;
-    public List<int> hands2;
-    public List<int> hands3;
-    public List<int> hands4;
-    public List<int> hands5;
-    public List<int> hands6;
-    public int num;
-    public List<int> community;
-    public int numSimulations;
+    /* 獲勝機率測試 
+     public List<int> hands1;
+     public List<int> hands2;
+     public List<int> hands3;
+     public List<int> hands4;
+     public List<int> hands5;
+     public List<int> hands6;
+     public int num;
+     public List<int> community;
+     public int numSimulations;
 
-    void Test()
-    {
-        Debug.Log("Start");
-        System.DateTime startTime = DateTime.Now;
-        PokerWinRateCalculator pokerWinRateCalculator = new PokerWinRateCalculator(hands1, community);
-        pokerWinRateCalculator.CalculateWinRate((winRate) =>
-        {
-            Debug.LogError($"Time={(System.DateTime.Now - startTime).TotalSeconds}");
-            Debug.LogError($"Rate={winRate}");
-        });        
-    }*/
+     void Test()
+     {
+         Debug.Log("Start");
+         System.DateTime startTime = DateTime.Now;
+         PokerWinRateCalculator pokerWinRateCalculator = new PokerWinRateCalculator(hands1, community);
+         pokerWinRateCalculator.CalculateWinRate((winRate) =>
+         {
+             Debug.LogError($"Time={(System.DateTime.Now - startTime).TotalSeconds}");
+             Debug.LogError($"Rate={winRate}");
+         });        
+     }*/
 
     #region Instagram登入
 
@@ -378,7 +379,6 @@ public class Entry : UnitySingleton<Entry>
         DataManager.IsDefaultBrowser = isDefaultBrowser == "true";
         Debug.Log($"isDefaultBrowser:{isDefaultBrowser}");
     }
-
 
     /// <summary>
     /// 是否在Coinbase瀏覽器內

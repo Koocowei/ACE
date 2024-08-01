@@ -154,7 +154,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     const string LocalCodeStartTime = "AsiaPoker_CodeStartTime";    //本地紀錄_OTP發送時間
 
     const int ErrorWalletConnectTime = 30;                          //判定連接失敗等待時間
-    const int codeCountDownTime = 22;                               //發送OTP倒數時間
+    const int codeCountDownTime = 60;                               //發送OTP倒數時間
 
     ChainData _currentChainData;                                    //當前連接練
     string _address;                                                //錢包地址
@@ -379,7 +379,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
         #endregion
 
-        #region 簡訊認證
+        #region 錢包連接簡訊認證
 
         //發送獲取驗證碼
         SMSOTPSend_Btn.onClick.AddListener(() =>
@@ -392,14 +392,14 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
             SMSMobileNumberError_Txt.text = "";
 
-            string phone = StringUtils.GetPhoneAddCode(SMSMobileNumber_Dd, SMSMobileNumber_If.text);
-            Debug.Log($"Send Code:{phone}");
+            string phoneNumber = StringUtils.GetPhoneAddCode(SMSMobileNumber_Dd, SMSMobileNumber_If.text);
+            Debug.Log($"Send Code:{phoneNumber}");
 
             SMSMobileNumberError_Txt.text = "";
             SMSCodeError_Txt.text = "";
             SMSOTP_If.text = "";
 
-            SetCodeCountDown();
+            SendOTP(phoneNumber);
         });
 
         //簡訊OTP提交
@@ -446,10 +446,9 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             {
                 RegisterNumberError_Txt.text = "";
                 string phoneNumber = StringUtils.GetPhoneAddCode(RegisterNumber_Dd, RegisterNumber_If.text);
-                //FirebaseManager.Instance.SendOTP(phoneNumber);
                 Debug.Log($"Register Send Code:{phoneNumber}");
 
-                SetCodeCountDown();
+                SendOTP(phoneNumber);
             }
         });
 
@@ -518,10 +517,10 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             else
             {
                 LostPswNumberError_Txt.text = "";
-                string phone = StringUtils.GetPhoneAddCode(LostPswNumber_Dd, LostPswNumber_If.text);
-                Debug.Log($"Lost Password Send Code:{phone}");
+                string phoneNumber = StringUtils.GetPhoneAddCode(LostPswNumber_Dd, LostPswNumber_If.text);
+                Debug.Log($"Lost Password Send Code:{phoneNumber}");
 
-                SetCodeCountDown();
+                SendOTP(phoneNumber);
             }
         });
 
@@ -783,10 +782,14 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// 設定OTP倒數
+    /// 發送OTP
     /// </summary>
-    private void SetCodeCountDown()
+    /// <param name="phoneNumber">手機號</param>
+    private void SendOTP(string phoneNumber)
     {
+        //JSBridgeManager.Instance.SendOTPCode(phoneNumber);
+        FirebaseManager.Instance.SendOTP(phoneNumber);
+
         codeStartTime = DateTime.Now;
         string codeStartTimeStr = codeStartTime.ToString("yyyy-MM-dd HH:mm:ss");
         PlayerPrefs.SetString(LocalCodeStartTime, codeStartTimeStr);
@@ -896,7 +899,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             string password = SignInPassword_If.text;
             Debug.Log($"Mobile Sign In = Phone:{phone} / Password = {password}");
 
-            if (phone == "886-987654321" && password == "A12345678")
+            if (phone == "+886987654321" && password == "A12345678")
             {
                 if (RememberMe_Tog.isOn)
                 {
@@ -909,7 +912,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             else
             {
                 MobileSignInError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
-                Debug.LogError("Correct is Phone:886-987654321 / Password:A12345678");
+                Debug.LogError("Correct is Phone:+886987654321 / Password:A12345678");
             }
         }
     }
@@ -954,6 +957,10 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         RegisterCodeError_Txt.text = "";
         RegisterPasswordError_Txt.text = "";
 
+        string phoneNumber = StringUtils.GetPhoneAddCode(RegisterNumber_Dd, RegisterNumber_If.text);
+        string code = RegisterOTP_If.text;
+        string psw = RegisterPassword_If.text;
+
         bool isCorrect = true;
         if (!StringUtils.CheckPhoneNumber(RegisterNumber_If.text))
         {
@@ -983,20 +990,40 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             RegisterPrivacyError_Txt.text = LanguageManager.Instance.GetText("Please Agree To The Privacy Policy.");
         }
 
+        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        {
+            //輸入手機號與驗證手機號不符
+            isCorrect = false;
+            RegisterCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
+        }
+
         if (isCorrect)
         {
-            //註冊成功
-            string phone = StringUtils.GetPhoneAddCode(RegisterNumber_Dd, RegisterNumber_If.text);
-            string code = RegisterOTP_If.text;
-            string psw = RegisterPassword_If.text;
-            Debug.Log($"Register Submit = Phone:{phone} / Code:{code} / Password:{psw}");
+            //資料正確    
+            Debug.Log($"Register Submit = Phone:{phoneNumber} / Code:{code} / Password:{psw}");
 
-            MobileSignIn_Obj.SetActive(false);
-            RegisterSucce_Obj.SetActive(true);
-
-            //設定TAB切換與Enter提交方法
-            KybordEnterAction = RegisterSuccessSignIn;
+            JSBridgeManager.Instance.VerifyOTPCode(code, "Register");
         }
+    }
+
+    /// <summary>
+    /// 手機註冊成功
+    /// </summary>
+    public void OnRegisterSuccess()
+    {
+        MobileSignIn_Obj.SetActive(false);
+        RegisterSucce_Obj.SetActive(true);
+
+        //設定TAB切換與Enter提交方法
+        KybordEnterAction = RegisterSuccessSignIn;
+    }
+
+    /// <summary>
+    /// 手機註冊OTP驗證失敗
+    /// </summary>
+    public void OnRegisterOTPCodeError()
+    {
+        RegisterCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
     }
 
     /// <summary>
@@ -1015,6 +1042,10 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         LostPswNumberError_Txt.text = "";
         LostPswCodeError_Txt.text = "";
         LostPswPasswordError_Txt.text = "";
+
+        string phoneNumber = StringUtils.GetPhoneAddCode(LostPswNumber_Dd, LostPswNumber_If.text);
+        string code = LostPswOTP_If.text;
+        string psw = LosrPswPassword_If.text;
 
         bool isCorrect = true;
         if (!StringUtils.CheckPhoneNumber(LostPswNumber_If.text))
@@ -1038,13 +1069,16 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             LostPswPasswordError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
         }
 
+        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        {
+            //輸入框手機號與驗證手機號不符
+            isCorrect = false;
+        }
+
         if (isCorrect)
         {
-            //註冊成功
-            string phone = StringUtils.GetPhoneAddCode(LostPswNumber_Dd, LostPswNumber_If.text);
-            string code = LostPswOTP_If.text;
-            string psw = LosrPswPassword_If.text;
-            Debug.Log($"Lost Password Submit = Phone:{phone} / Code:{code} / Password:{psw}");
+            //忘記密碼提交成功
+            Debug.Log($"Lost Password Submit = Phone:{phoneNumber} / Code:{code} / Password:{psw}");
         }
     }
 
@@ -1303,6 +1337,9 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         SMSMobileNumberError_Txt.text = "";
         SMSCodeError_Txt.text = "";
 
+        string phoneNumber = StringUtils.GetPhoneAddCode(SMSMobileNumber_Dd, SMSMobileNumber_If.text);
+        string code = SMSOTP_If.text;
+
         bool isCorrect = true;
         if (!StringUtils.CheckPhoneNumber(SMSMobileNumber_If.text))
         {
@@ -1314,7 +1351,12 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         if (string.IsNullOrEmpty(SMSOTP_If.text))
         {
             //OTP為空
-            SMSCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
+            isCorrect = false;
+        }
+
+        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        {
+            //輸入框手機號與驗證手機號不符
             isCorrect = false;
         }
 
@@ -1322,24 +1364,43 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
         if (isCorrect && isConnect)
         {
-            string code = SMSOTP_If.text;
-            string phone = StringUtils.GetPhoneAddCode(SMSMobileNumber_Dd, SMSMobileNumber_If.text);
-            Debug.Log($"Sign In = Phone Number : {phone} / Password: {code}");
 
-            if (phone == "886-987654321" && code == "12345678")
+            Debug.Log($"Sign In = Phone Number : {phoneNumber} / Password: {code}");
+
+            if (phoneNumber == "+886987654321" && code == "12345678")
             {
                 LoadSceneManager.Instance.LoadScene(SceneEnum.Lobby);
             }
             else
             {
                 SMSCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
-                Debug.LogError("Correct is Phone:886-987654321 / Code:12345678");
+                Debug.LogError("Correct is Phone:+886987654321 / Code:12345678");
             }
+
+            //JSBridgeManager.Instance.VerifyOTPCode(code, "WalletLogin");
+
+            //FirebaseManager.Instance.VerifyOTP(code);
         }     
         else
         {
             SMSCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
         }
+    }
+
+    /// <summary>
+    /// 錢包連接手機登入成功
+    /// </summary>
+    public void OnWalletLoginSuccess()
+    {
+        LoadSceneManager.Instance.LoadScene(SceneEnum.Lobby);
+    }
+
+    /// <summary>
+    /// 錢包連接OTP驗證失敗
+    /// </summary>
+    public void OnWalletLoginOTPCodeError()
+    {
+        SMSCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
     }
 
     #endregion

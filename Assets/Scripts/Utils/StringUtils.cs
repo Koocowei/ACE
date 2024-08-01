@@ -311,13 +311,13 @@ public static class StringUtils
         }
 
         string countryCode = dropdown.options[dropdown.value].text;
-        countryCode = countryCode.Replace("+", "");
+        //countryCode = countryCode.Replace("+", "");
         if (phoneNumber[0] == '0')
         {
             phoneNumber = phoneNumber.Substring(1);
         }
         
-        return $"{countryCode}-{phoneNumber}";
+        return $"{countryCode}{phoneNumber}";
     }
 
     /// <summary>
