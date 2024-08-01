@@ -543,7 +543,7 @@ public class LobbyMinePageView : MonoBehaviour
         string authUrl = $"https://api.instagram.com/oauth/authorize?client_id=" +
                          $"{DataManager.InstagramChannelID}&redirect_uri={DataManager.InstagramRedirectUri}" +
                          $"&scope=user_profile,user_media&response_type=code";
-        Application.OpenURL(authUrl);
+        JSBridgeManager.Instance.LocationHref(authUrl);
     }
 
     /// <summary>
