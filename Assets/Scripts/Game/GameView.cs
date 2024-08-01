@@ -62,16 +62,22 @@ public class GameView : MonoBehaviour
     [SerializeField]
     List<Poker> CommunityPokerList;
 
+    [Header("離開按鈕")]
+    [SerializeField]
+    Button LogOut_Btn;
+    [SerializeField]
+    TextMeshProUGUI LogOutBtn_Txt;
+
     [Header("選單")]
     [SerializeField]
     RectTransform MenuPage_Tr;
     [SerializeField]
-    Button Menu_Btn, MenuClose_Btn, SitOut_Btn, BuyChips_Btn, LogOut_Btn, HandHistory_Btn;
+    Button Menu_Btn, MenuClose_Btn, SitOut_Btn, BuyChips_Btn, HandHistory_Btn;
     [SerializeField]
     Image MenuAvatar_Img;
     [SerializeField]
     TextMeshProUGUI MenuCloseBtn_Txt, SitOutBtn_Txt, BuyChipsBtn_Txt, HandHistoryBtn_Txt,
-                    LogOutBtn_Txt, GameSettingsBtn_Txt,
+                    GameSettingsBtn_Txt,
                     MenuNickname_Txt, MenuWalletAddr_Txt;
 
     [Header("聊天")]

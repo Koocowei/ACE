@@ -97,7 +97,7 @@ public class Entry : UnitySingleton<Entry>
         {
             //Test();
             //StartCoroutine(GetSum(1, 1));
-
+            OnWindowBlur();
         }
     }
 
