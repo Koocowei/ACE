@@ -79,6 +79,16 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     #region 工具
 
     [DllImport("__Internal")]
+    private static extern bool JS_Share(string title, string content, string url);
+    /// <summary>
+    /// 分享
+    /// </summary>
+    public void Share(string title, string content, string url)
+    {
+        JS_Share(title, content, url);
+    }
+
+    [DllImport("__Internal")]
     private static extern bool JS_Reload();
     /// <summary>
     /// 瀏覽器重新整理

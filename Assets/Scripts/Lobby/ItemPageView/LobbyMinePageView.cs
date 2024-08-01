@@ -6,6 +6,7 @@ using System;
 using UnityEngine.Events;
 using System.Linq;
 using TMPro;
+using Thirdweb;
 
 public class LobbyMinePageView : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class LobbyMinePageView : MonoBehaviour
 
     [Header("用戶訊息")]
     [SerializeField]
-    GameObject UserPorfile_Obj;
+    GameObject UserPorfile_Obj, WalletAddressBg_Obj;
     [SerializeField]
     Button EditorAvatar_Btn, CopyWalletAddress_Btn;
     [SerializeField]
@@ -70,6 +71,14 @@ public class LobbyMinePageView : MonoBehaviour
     TextMeshProUGUI SocialMediaTitle_Txt,
                     IGNotYetLinked_Txt, LineNotYetLinked_Txt,
                     IGLinked_Txt, LineLinked_Txt;
+
+    [Header("邀請碼")]
+    [SerializeField]
+    Button InvitationCodeShare_Btn;
+    [SerializeField]
+    Image InvitationQRCode_Img;
+    [SerializeField]
+    TextMeshProUGUI InvitationCodeTitle_Txt, InvitationCodeShareBtn_Txt;
 
     [Header("交易紀錄")]
     [SerializeField]
@@ -154,6 +163,13 @@ public class LobbyMinePageView : MonoBehaviour
         SocialMediaTitle_Txt.text = LanguageManager.Instance.GetText("Social Media");
         IGNotYetLinked_Txt.text = LanguageManager.Instance.GetText("Not Yet Linked");
         LineNotYetLinked_Txt.text = LanguageManager.Instance.GetText("Not Yet Linked");
+
+        #endregion
+
+        #region 邀請碼
+
+        InvitationCodeTitle_Txt.text = LanguageManager.Instance.GetText("Invitation code");
+        InvitationCodeShareBtn_Txt.text = LanguageManager.Instance.GetText("Share");
 
         #endregion
 
@@ -304,6 +320,21 @@ public class LobbyMinePageView : MonoBehaviour
 
         #endregion
 
+        #region 邀請碼
+
+        //邀請碼分享
+        InvitationCodeShare_Btn.onClick.AddListener(() =>
+        {
+            string title = LanguageManager.Instance.GetText("Invitation Code");
+            string content = LanguageManager.Instance.GetText("Asia Poker");
+            string url = "https://kooco.github.io/ACEdemo/demo.asiapoker/index.html";
+            JSBridgeManager.Instance.Share(title,
+                                           content,
+                                           url);
+        });
+
+        #endregion
+
         #region 第三方連接
 
         //IG連接
@@ -394,6 +425,8 @@ public class LobbyMinePageView : MonoBehaviour
         SelectAvatarIcon_Tr.SetParent(avatarBtnList[DataManager.UserAvatar].transform);
         SelectAvatarIcon_Tr.anchoredPosition = Vector2.zero;
 
+        //產生分享RQ Code
+        InvitationQRCode_Img.sprite = Utils.GenerateQRCodeTexture("https://kooco.github.io/ACEdemo/demo.asiapoker/index.html");
 
         Viewport.enabled = true;
 
@@ -419,6 +452,7 @@ public class LobbyMinePageView : MonoBehaviour
 
         //錢包地址
         StringUtils.StrExceedSize(DataManager.UserWalletAddress, WalletAddress_Txt);
+        WalletAddressBg_Obj.SetActive(!string.IsNullOrEmpty(WalletAddress_Txt.text));
 
         //IG連接
         IGNotYetLinked_Obj.SetActive(string.IsNullOrEmpty(DataManager.IGIUserIdAndName));
