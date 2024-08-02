@@ -868,5 +868,70 @@
     "ID": "HightCard",
     "English": "Hight Card",
     "zh_TW": "高牌"
+  },
+  {
+    "ID": "商城",
+    "English": null,
+    "zh_TW": null
+  },
+  {
+    "ID": "STAMINA",
+    "English": "STAMINA",
+    "zh_TW": "耐力"
+  },
+  {
+    "ID": "EXTRATIME",
+    "English": "EXTRA TIME",
+    "zh_TW": "加時道具"
+  },
+  {
+    "ID": "ExtraTime",
+    "English": "ExtraTime",
+    "zh_TW": "加時道具"
+  },
+  {
+    "ID": "Percentage",
+    "English": "Percentage",
+    "zh_TW": "百分比"
+  },
+  {
+    "ID": "Second",
+    "English": "Second",
+    "zh_TW": "秒"
+  },
+  {
+    "ID": "Mall Message",
+    "English": "Mall Message",
+    "zh_TW": "商城訊息"
+  },
+  {
+    "ID": "Purchase",
+    "English": "Purchase",
+    "zh_TW": "購買"
+  },
+  {
+    "ID": "CANCLE",
+    "English": "CANCLE",
+    "zh_TW": "取消"
+  },
+  {
+    "ID": "CONFIRM",
+    "English": "CONFIRM",
+    "zh_TW": "確認"
+  },
+  {
+    "ID": "PurchaseSuccess",
+    "English": "Purchase Success!!",
+    "zh_TW": "購買完成!!"
+  },
+  {
+    "ID": "Insufficient balance",
+    "English": "Insufficient balance.",
+    "zh_TW": "餘額不足"
+  },
+  {
+    "ID": "Please proceed with collateralization",
+    "English": "Please proceed with collateralization.",
+    "zh_TW": "請繼續抵押"
   }
 ]
