@@ -32,6 +32,10 @@ public class Entry : UnitySingleton<Entry>
 
     public override void Awake()
     {
+#if !UNITY_EDITOR
+        JSBridgeManager.Instance.SetupRecaptchaVerifier();
+#endif
+
         base.Awake();
 
         #region 測試用
@@ -95,34 +99,9 @@ public class Entry : UnitySingleton<Entry>
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            //Test();
-            //StartCoroutine(GetSum(1, 1));
-            OnWindowBlur();
+            LoadSceneManager.Instance.LoadScene(SceneEnum.Login);
         }
     }
-
-    /* 獲勝機率測試 
-     public List<int> hands1;
-     public List<int> hands2;
-     public List<int> hands3;
-     public List<int> hands4;
-     public List<int> hands5;
-     public List<int> hands6;
-     public int num;
-     public List<int> community;
-     public int numSimulations;
-
-     void Test()
-     {
-         Debug.Log("Start");
-         System.DateTime startTime = DateTime.Now;
-         PokerWinRateCalculator pokerWinRateCalculator = new PokerWinRateCalculator(hands1, community);
-         pokerWinRateCalculator.CalculateWinRate((winRate) =>
-         {
-             Debug.LogError($"Time={(System.DateTime.Now - startTime).TotalSeconds}");
-             Debug.LogError($"Rate={winRate}");
-         });        
-     }*/
 
     #region Instagram登入
 

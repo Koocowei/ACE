@@ -10,40 +10,67 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
         base.Awake();
     }
 
+    #region reCAPTCHA
+
+    [DllImport("__Internal")]
+    private static extern bool JS_SetupRecaptchaVerifier();
+    /// <summary>
+    /// 設置Recaptcha驗證監聽
+    /// </summary>
+    /// <returns></returns>
+    public void SetupRecaptchaVerifier()
+    {
+        JS_SetupRecaptchaVerifier();
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_OpenRecaptchaTool();
+    /// <summary>
+    /// 開啟Recaptcha小工具
+    /// </summary>
+    /// <returns></returns>
+    public void OpenRecaptchaTool()
+    {
+        JS_OpenRecaptchaTool();
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_CloseRecaptchaTool();
+    /// <summary>
+    /// 關閉Recaptcha小工具
+    /// </summary>
+    /// <returns></returns>
+    public void CloseRecaptchaTool()
+    {
+        JS_CloseRecaptchaTool();
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_TriggerRecaptcha(string phoneNumber);
+    /// <summary>
+    /// 觸發Recaptcha驗證
+    /// </summary>
+    /// <returns></returns>
+    public void TriggerRecaptcha(string phoneNumber)
+    {
+        JS_TriggerRecaptcha(phoneNumber);
+    }
+
+    #endregion
+
     #region Firebase
 
     [DllImport("__Internal")]
-    private static extern bool JS_GetRecaptchaToken(string action);
+    private static extern bool JS_FirebaseVerifyCode(string code, string type);
     /// <summary>
-    /// 獲取Recaptcha Token
-    /// </summary>
-    /// <returns></returns>
-    public void GetRecaptchaToken()
-    {
-        JS_GetRecaptchaToken("send_otp");
-    }
-
-    [DllImport("__Internal")]
-    private static extern bool JS_SendOTPCode(string phoneNumber);
-    /// <summary>
-    /// 發送OTP
-    /// </summary>
-    /// <returns></returns>
-    public void SendOTPCode(string phoneNumber)
-    {
-        JS_SendOTPCode(phoneNumber);
-    }
-
-    [DllImport("__Internal")]
-    private static extern bool JS_VerifyOTPCode(string code, string typeStr);
-    /// <summary>
-    /// 驗證OTP Code
+    /// 驗證OTP
     /// </summary>
     /// <param name="code">OTP Code</param>
-    /// <param name="typeStr">驗證類型判斷</param>
-    public void VerifyOTPCode(string code, string typeStr)
+    /// <param name="type">當前驗證類型</param>
+    public void FirebaseVerifyCode(string code, string type)
     {
-        JS_VerifyOTPCode(code, typeStr);
+        JS_FirebaseVerifyCode(code,
+                              type);
     }
 
     #endregion

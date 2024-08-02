@@ -162,12 +162,14 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     Coroutine connectionEffectCoroutine;                            //連接錢包效果
     DateTime startConnectTime;                                      //開始連接錢包時間
     bool isShowPassword;                                            //是否顯示密碼
+    bool isClickSignUpHere;                                         //是否點擊註冊
     bool isRegisterPasswordCorrect;                                 //是否手機注冊密碼正確
     bool isLostPswPasswordCorrect;                                  //是否忘記密碼密碼正確
     string recodePhoneNumber;                                       //紀錄的手機號
     string recodePassword;                                          //紀錄的密碼
     DateTime codeStartTime;                                         //發送OTP倒數開始時間
     WalletEnum currConnectingWallet;                                //當前連接錢包
+    string CurrVerifyPhoneNumber;                                   //當前OTP驗證手機號
 
     List<TMP_InputField> currIfList = new List<TMP_InputField>();   //當前可切換InputFild
     UnityAction KybordEnterAction;                                  //Enter鍵執行方法
@@ -220,7 +222,6 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
         #region 手機登入
 
-        MobileTitle_Txt.text = LanguageManager.Instance.GetText("SIGN IN");
         SignInMobileNumber_Txt.text = LanguageManager.Instance.GetText("MobileNumber");
         SignInNumberIf_Placeholder.text = LanguageManager.Instance.GetText("Your Phone Number");
         SignInPassword_Txt.text = LanguageManager.Instance.GetText("Password");
@@ -315,8 +316,18 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-                //手機登入
-                OnMobileSignInInit();
+                if (isClickSignUpHere)
+                {
+                    isClickSignUpHere = false;
+                    //手機註冊
+                    MobileRegisterInit();
+                }
+                else
+                {
+                    //手機登入
+                    OnMobileSignInInit();
+                }
+
             }            
         });
 
@@ -696,8 +707,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             {
                 //註冊
                 case "Sign Up Here!":
+                    isClickSignUpHere = true;
                     Mobile_Tog.isOn = true;
-                    MobileRegisterInit();
                     break;
             }
         }
@@ -787,8 +798,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     /// <param name="phoneNumber">手機號</param>
     private void SendOTP(string phoneNumber)
     {
-        //JSBridgeManager.Instance.SendOTPCode(phoneNumber);
-        FirebaseManager.Instance.SendOTP(phoneNumber);
+        CurrVerifyPhoneNumber = phoneNumber;
+        JSBridgeManager.Instance.TriggerRecaptcha(phoneNumber);
 
         codeStartTime = DateTime.Now;
         string codeStartTimeStr = codeStartTime.ToString("yyyy-MM-dd HH:mm:ss");
@@ -849,11 +860,12 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     /// </summary>
     async private void OnMobileSignInInit()
     {
-        await ThirdwebManager.Instance.SDK.Wallet.Disconnect(true);
-
         //手機登入
+        MobileTitle_Txt.text = LanguageManager.Instance.GetText("SIGN IN");
         SignInNumberError_Txt.text = "";
         MobileSignInError_Txt.text = "";
+
+        await ThirdwebManager.Instance.SDK.Wallet.Disconnect(true);
 
         //紀錄的手機/密碼
         SignInNumber_If.text = !string.IsNullOrEmpty(recodePhoneNumber) ?
@@ -990,7 +1002,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             RegisterPrivacyError_Txt.text = LanguageManager.Instance.GetText("Please Agree To The Privacy Policy.");
         }
 
-        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        if (phoneNumber != CurrVerifyPhoneNumber)
         {
             //輸入手機號與驗證手機號不符
             isCorrect = false;
@@ -1002,12 +1014,17 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             //資料正確    
             Debug.Log($"Register Submit = Phone:{phoneNumber} / Code:{code} / Password:{psw}");
 
-            JSBridgeManager.Instance.VerifyOTPCode(code, "Register");
+            RegisterNumberError_Txt.text = "";
+            RegisterCodeError_Txt.text = "";
+            RegisterPasswordError_Txt.text = "";
+
+            JSBridgeManager.Instance.FirebaseVerifyCode(code, 
+                                                        "Register");
         }
     }
 
     /// <summary>
-    /// 手機註冊成功
+    /// 手機註冊OTP驗證成功
     /// </summary>
     public void OnRegisterSuccess()
     {
@@ -1069,7 +1086,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             LostPswPasswordError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
         }
 
-        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        if (phoneNumber != CurrVerifyPhoneNumber)
         {
             //輸入框手機號與驗證手機號不符
             isCorrect = false;
@@ -1079,7 +1096,30 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         {
             //忘記密碼提交成功
             Debug.Log($"Lost Password Submit = Phone:{phoneNumber} / Code:{code} / Password:{psw}");
+
+            LostPswNumberError_Txt.text = "";
+            LostPswCodeError_Txt.text = "";
+            LostPswPasswordError_Txt.text = "";
+
+            JSBridgeManager.Instance.FirebaseVerifyCode(code,
+                                            "LostPsw");
         }
+    }
+
+    /// <summary>
+    /// 忘記密碼OTP驗證成功
+    /// </summary>
+    public void OnLostPswSuccess()
+    {
+        OnMobileSignInInit();
+    }
+
+    /// <summary>
+    /// 忘記密碼OTP驗證失敗
+    /// </summary>
+    public void OnLostPswOTPCodeError()
+    {
+        LostPswCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
     }
 
     #endregion
@@ -1354,7 +1394,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             isCorrect = false;
         }
 
-        if (phoneNumber != FirebaseManager.Instance.CurrPhoneNumber)
+        if (phoneNumber != CurrVerifyPhoneNumber)
         {
             //輸入框手機號與驗證手機號不符
             isCorrect = false;
@@ -1367,7 +1407,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
             Debug.Log($"Sign In = Phone Number : {phoneNumber} / Password: {code}");
 
-            if (phoneNumber == "+886987654321" && code == "12345678")
+            /*if (phoneNumber == "+886987654321" && code == "12345678")
             {
                 LoadSceneManager.Instance.LoadScene(SceneEnum.Lobby);
             }
@@ -1375,11 +1415,13 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             {
                 SMSCodeError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
                 Debug.LogError("Correct is Phone:+886987654321 / Code:12345678");
-            }
+            }*/
 
-            //JSBridgeManager.Instance.VerifyOTPCode(code, "WalletLogin");
+            SMSMobileNumberError_Txt.text = "";
+            SMSCodeError_Txt.text = "";
 
-            //FirebaseManager.Instance.VerifyOTP(code);
+            JSBridgeManager.Instance.FirebaseVerifyCode(code,
+                                                        "Wallet");
         }     
         else
         {
@@ -1388,7 +1430,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// 錢包連接手機登入成功
+    /// 錢包連接手機OTP驗證成功
     /// </summary>
     public void OnWalletLoginSuccess()
     {

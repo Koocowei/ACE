@@ -1906,6 +1906,21 @@ public class GameView : MonoBehaviour
     }
 
     /// <summary>
+    /// 判斷勝率
+    /// </summary>
+    private void JudgeWinRate()
+    {
+        DateTime startTime = DateTime.Now;
+        List<int> judgeHand = thisData.LocalGamePlayerInfo.GetHandPoker.Select(x => x.PokerNum).ToList();
+        PokerWinRateCalculator pokerWinRateCalculator = new PokerWinRateCalculator(judgeHand, thisData.CurrCommunityPoker);
+        pokerWinRateCalculator.CalculateWinRate((winRate) =>
+        {
+            Debug.Log($"Judge Win Rate Time : {(DateTime.Now - startTime).TotalSeconds}");
+            Debug.Log($"Win Rate : {winRate}");
+        });
+    }
+
+    /// <summary>
     /// 遊戲階段
     /// </summary>
     /// <returns></returns>
@@ -1947,6 +1962,7 @@ public class GameView : MonoBehaviour
                 HandPokerLicensing(pack.LicensingStagePack.HandPokerDic);
                 SetButtonSeat(pack.LicensingStagePack.ButtonSeatId);
                 SetSitOutDisplay();
+                JudgeWinRate();
                 break;
 
             //大小盲
@@ -1963,18 +1979,21 @@ public class GameView : MonoBehaviour
             case FlowEnum.Flop:
                 yield return IFlopCommunityPoker(pack.CommunityPokerPack.CurrCommunityPoker);
                 RountInit();
+                JudgeWinRate();
                 break;
 
             //轉牌
             case FlowEnum.Turn:
                 yield return IFlopCommunityPoker(pack.CommunityPokerPack.CurrCommunityPoker);
                 RountInit();
+                JudgeWinRate();
                 break;
 
             //河牌
             case FlowEnum.River:
                 yield return IFlopCommunityPoker(pack.CommunityPokerPack.CurrCommunityPoker);
                 RountInit();
+                JudgeWinRate();
                 break;
 
             //主池結果

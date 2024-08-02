@@ -134,11 +134,17 @@ public class LoadSceneManager : UnitySingleton<LoadSceneManager>
         switch (sceneEnum)
         {
             case SceneEnum.Login:
+#if !UNITY_EDITOR
+                JSBridgeManager.Instance.OpenRecaptchaTool();
+#endif
                 NFTManager.Instance.CancelUpdate();
                 ViewManager.Instance.CreateViewInCurrCanvas<LoginView>(LoginViewObj);
                 break;
 
             case SceneEnum.Lobby:
+#if !UNITY_EDITOR
+                JSBridgeManager.Instance.CloseRecaptchaTool();
+#endif
                 DataManager.ReciveRankData();
                 ViewManager.Instance.CreateViewInCurrCanvas<LobbyView>(LobbyViewObj);
                 break;
