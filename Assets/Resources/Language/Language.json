@@ -255,6 +255,16 @@
     "zh_TW": "加密貨幣"
   },
   {
+    "ID": "U COIN",
+    "English": "U COIN",
+    "zh_TW": "U幣"
+  },
+  {
+    "ID": "A COIN",
+    "English": "A COIN",
+    "zh_TW": "A幣"
+  },
+  {
     "ID": "GOLD",
     "English": "GOLD",
     "zh_TW": "黃金"
@@ -688,6 +698,16 @@
     "ID": "Not Yet Linked",
     "English": "Not Yet Linked",
     "zh_TW": "尚未連結"
+  },
+  {
+    "ID": "Invitation code",
+    "English": "Invitation code",
+    "zh_TW": "邀請碼"
+  },
+  {
+    "ID": "Share",
+    "English": "Share",
+    "zh_TW": "分享"
   },
   {
     "ID": "手牌紀錄",

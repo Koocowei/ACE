@@ -16,17 +16,28 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     /// 讀取資料回傳
     /// </summary>
     /// <param name="jsonData"></param>
-    public void OnFirebaseDataRead(string jsonData)
+    public T OnFirebaseDataRead<T>(string jsonData) where T : class
     {
-        var data = JObject.Parse(jsonData);
+        var data = JsonConvert.DeserializeObject<T>(jsonData);
 
-        if (data["error"] != null)
+        if (data == null)
         {
-            Debug.LogError("Firebase read error: " + data["error"].ToString());
+            Debug.LogError("Firebase read error or data is null.");
+            return default;
         }
         else
         {
-            Debug.Log("Firebase data read: " + data.ToString());
+            Debug.Log("Firebase data read: " + JsonUtility.ToJson(data, true));
+            return data;
         }
     }
+}
+
+/// <summary>
+/// 登入資料
+/// </summary>
+public class LoginData
+{
+    public string PhoneNumber;
+    public string Password;
 }

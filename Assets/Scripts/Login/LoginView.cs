@@ -1021,6 +1021,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             RegisterCodeError_Txt.text = "";
             RegisterPasswordError_Txt.text = "";
 
+            //讀取資料判斷是否已有資料
+
             JSBridgeManager.Instance.FirebaseVerifyCode(code, 
                                                         "Register");
         }

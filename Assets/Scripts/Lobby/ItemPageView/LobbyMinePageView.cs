@@ -20,7 +20,7 @@ public class LobbyMinePageView : MonoBehaviour
     [SerializeField]
     Button EditorAvatar_Btn, CopyWalletAddress_Btn;
     [SerializeField]
-    TextMeshProUGUI Nickname_Txt, WalletAddress_Txt, Copied_Txt;
+    TextMeshProUGUI Nickname_Txt, WalletAddress_Txt, CopiedWalletAddress_Txt;
 
     [Header("更換頭像")]
     [SerializeField]
@@ -74,11 +74,12 @@ public class LobbyMinePageView : MonoBehaviour
 
     [Header("邀請碼")]
     [SerializeField]
-    Button InvitationCodeShare_Btn;
+    Button InvitationCodeShare_Btn, CopyInvitationCode_Btn;
     [SerializeField]
     Image InvitationQRCode_Img;
     [SerializeField]
-    TextMeshProUGUI InvitationCodeTitle_Txt, InvitationCodeShareBtn_Txt;
+    TextMeshProUGUI InvitationCodeTitle_Txt, InvitationCodeShareBtn_Txt, 
+                    InvitationCode_Txt, CopiedInvitationCode_Txt;
 
     [Header("交易紀錄")]
     [SerializeField]
@@ -128,7 +129,7 @@ public class LobbyMinePageView : MonoBehaviour
     {
         #region 用戶訊息
 
-        Copied_Txt.text = LanguageManager.Instance.GetText("Copied!");
+        CopiedWalletAddress_Txt.text = LanguageManager.Instance.GetText("Copied!");
 
         #endregion
 
@@ -211,9 +212,15 @@ public class LobbyMinePageView : MonoBehaviour
         ListenerEvent();
 
         //錢包地址已複製文字
-        Color color = Copied_Txt.color;
+        Color color = CopiedWalletAddress_Txt.color;
         color.a = 0;
-        Copied_Txt.color = color;
+        CopiedWalletAddress_Txt.color = color;
+        //邀請碼已複製文字
+        CopiedInvitationCode_Txt.color = color;
+
+        //邀請碼內容
+        StringUtils.StrExceedSize(DataManager.UserInviteCode,
+                                  InvitationCode_Txt);
 
         ChangeAvatar_Tr.gameObject.SetActive(false);
 
@@ -247,7 +254,7 @@ public class LobbyMinePageView : MonoBehaviour
             if (!string.IsNullOrEmpty(WalletAddress_Txt.text))
             {
                 StringUtils.CopyText(DataManager.UserWalletAddress);
-                UnityUtils.Instance.ColorFade(Copied_Txt,
+                UnityUtils.Instance.ColorFade(CopiedWalletAddress_Txt,
                                               null,
                                               0.2f,
                                               0.5f,
@@ -331,6 +338,20 @@ public class LobbyMinePageView : MonoBehaviour
             JSBridgeManager.Instance.Share(title,
                                            content,
                                            url);
+        });
+
+        //複製邀請碼
+        CopyInvitationCode_Btn.onClick.AddListener(() =>
+        {
+            if (!string.IsNullOrEmpty(InvitationCode_Txt.text))
+            {
+                StringUtils.CopyText(DataManager.UserInviteCode);
+                UnityUtils.Instance.ColorFade(CopiedInvitationCode_Txt,
+                                              null,
+                                              0.2f,
+                                              0.5f,
+                                              1.5f);
+            }
         });
 
         #endregion

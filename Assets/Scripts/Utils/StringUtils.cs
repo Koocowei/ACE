@@ -82,7 +82,7 @@ public static class StringUtils
 
 #endif
 
-        Debug.Log($"Copy Text:{str}");    
+        Debug.Log($"Copy Text : {str}");    
     }
 
     /// <summary>

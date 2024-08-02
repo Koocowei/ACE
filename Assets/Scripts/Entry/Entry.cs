@@ -46,6 +46,7 @@ public class Entry : UnitySingleton<Entry>
         DataManager.UserGoldChips = 65000;
         DataManager.UserStamina = 45;
         DataManager.UserOTProps = 8;
+        DataManager.UserInviteCode = "S84f66s78As";
 
         #endregion
     }

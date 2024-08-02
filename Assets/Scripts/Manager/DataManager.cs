@@ -63,6 +63,7 @@ public static class DataManager
 
     public static string UserWalletAddress { get; set; }            //用戶錢包地址
     public static string UserWalletBalance { get; set; }            //用戶錢包餘額
+    public static string UserInviteCode { get; set; }               //用戶邀請碼
     public static string UserId { get; set; }                       //用戶ID
     public static string UserNickname { get; set; }                 //用戶暱稱
     public static int UserAvatar { get; set; }                      //用戶頭像
@@ -70,7 +71,7 @@ public static class DataManager
     public static int UserOTProps { get; set; }                     //用戶加時道具數量
     public static double UserCryptoChips { get; set; }              //用戶加密貨幣籌碼
     public static double UserVCChips { get; set; }                  //用戶虛擬貨幣籌碼
-    public static double UserGoldChips { get; set; }                 //用戶Gold籌碼
+    public static double UserGoldChips { get; set; }                //用戶Gold籌碼
 
     #endregion
 
