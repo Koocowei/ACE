@@ -142,33 +142,33 @@ public static class DataManager
     //  體力商品資料
     public static List<ShopData> Stamina_Shop = new List<ShopData>()
     {
-        new ShopData(){BuffName = "Percentage",BuffAmount = 10,CostCoin = 30 },
-        new ShopData(){BuffName = "Percentage",BuffAmount = 50,CostCoin = 150 },
-        new ShopData(){BuffName = "Percentage",BuffAmount = 100,CostCoin = 300},
+        new ShopData(){BuffAmount = 10,CostCoin = 30 },
+        new ShopData(){BuffAmount = 50,CostCoin = 150 },
+        new ShopData(){BuffAmount = 100,CostCoin = 300},
         //new ShopData(){BuffName = "rrr",BuffAmount = 29328392,CostCoin = 8787},
     };
 
     //  金幣商品資料
     public static List<ShopData> Gold_Shop = new List<ShopData>()
     {
-        new ShopData(){BuffName = "Points", BuffAmount = 100,CostCoin = 30},
-        new ShopData(){BuffName = "Points", BuffAmount = 300,CostCoin = 90},
-        new ShopData(){BuffName = "Points", BuffAmount = 400,CostCoin = 120},
-        new ShopData(){BuffName = "Points", BuffAmount = 500,CostCoin = 150},
-        new ShopData(){BuffName = "Points", BuffAmount = 850,CostCoin = 250},
-        new ShopData(){BuffName = "Points", BuffAmount = 1000,CostCoin = 300},
+        new ShopData(){BuffAmount = 100,CostCoin = 30},
+        new ShopData(){BuffAmount = 300,CostCoin = 90},
+        new ShopData(){BuffAmount = 400,CostCoin = 120},
+        new ShopData(){BuffAmount = 500,CostCoin = 150},
+        new ShopData(){BuffAmount = 850,CostCoin = 250},
+        new ShopData(){BuffAmount = 1000,CostCoin = 300},
         //new ShopData(){BuffName = "Testtttt", BuffAmount = 23333333,CostCoin = 888888},
     };
 
     //  加時商品資料
     public static List<ShopData> ExtraTime_Shop = new List<ShopData>()
     {
-        new ShopData(){BuffName = "Second", BuffAmount = 10,CostCoin = 30},
-        new ShopData(){BuffName = "Second", BuffAmount = 30,CostCoin = 90},
-        new ShopData(){BuffName = "Second", BuffAmount = 40,CostCoin = 120},
-        new ShopData(){BuffName = "Second", BuffAmount = 50,CostCoin = 150},
-        new ShopData(){BuffName = "Second", BuffAmount = 85,CostCoin = 250},
-        new ShopData(){BuffName = "Second", BuffAmount = 100,CostCoin = 300},
+        new ShopData(){BuffAmount = 10,CostCoin = 30},
+        new ShopData(){BuffAmount = 30,CostCoin = 90},
+        new ShopData(){BuffAmount = 40,CostCoin = 120},
+        new ShopData(){BuffAmount = 50,CostCoin = 150},
+        new ShopData(){BuffAmount = 85,CostCoin = 250},
+        new ShopData(){BuffAmount = 100,CostCoin = 300},
     };
 
 
@@ -319,7 +319,6 @@ public class RankData
 //  商店商品資料
 public class ShopData
 {
-    public string BuffName;
     public int BuffAmount;
     public int CostCoin;
 }
