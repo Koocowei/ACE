@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 public class JSBridgeManager : UnitySingleton<JSBridgeManager>
 {
@@ -72,6 +73,62 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
         JS_FirebaseVerifyCode(code,
                               type);
     }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_WriteDataFromFirebase(string refPathPtr, string jsonDataPtr);
+    /// <summary>
+    /// 寫入資料
+    /// </summary>
+    /// <param name="refPathPtr">資料路徑</param>
+    /// <param name="data">資料</param>
+    public void WriteDataFromFirebase(string refPathPtr, Dictionary<string, object> data)
+    {
+        string jsonData = JsonConvert.SerializeObject(data);
+        JS_WriteDataFromFirebase(refPathPtr,
+                                 jsonData);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_UpdateDataFromFirebase(string refPathPtr, string jsonDataPtr);
+    /// <summary>
+    /// 修改與擴充資料
+    /// </summary>
+    /// <param name="refPathPtr">資料路徑</param>
+    /// <param name="data">資料</param>
+    public void UpdateDataFromFirebase(string refPathPtr, Dictionary<string, object> data)
+    {
+        string jsonData = JsonConvert.SerializeObject(data);
+        JS_UpdateDataFromFirebase(refPathPtr,
+                                  jsonData);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_ReadDataFromFirebase(string refPathPtr, string objNamePtr, string callbackFunPtr);
+    /// <summary>
+    /// 讀取資料
+    /// </summary>
+    /// <param name="refPathPtr">資料路徑</param>
+    /// <param name="objNamePtr">回傳物件名</param>
+    /// <param name="callbackFunPtr">回傳方法名</param>
+    public void ReadDataFromFirebase(string refPathPtr, string objNamePtr, string callbackFunPtr)
+    {
+        JS_ReadDataFromFirebase(refPathPtr,
+                                "FirebaseManager",
+                                "OnFirebaseDataRead");
+    }
+
+    /*[DllImport("__Internal")]
+    private static extern bool JS_FirebaseWriteLoginData(string code, string type);
+    /// <summary>
+    /// 寫入登入資料
+    /// </summary>
+    /// <param name="phone">手機號</param>
+    /// <param name="pse">密碼</param>
+    public void FirebaseWriteLoginData(string phone, string pse)
+    {
+        JS_FirebaseWriteLoginData(phone,
+                                  pse);
+    }*/
 
     #endregion
 

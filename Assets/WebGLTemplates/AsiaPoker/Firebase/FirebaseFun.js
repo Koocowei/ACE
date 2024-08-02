@@ -12,7 +12,7 @@ function initializeFirebase() {
     };
 
     // 初始化 Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
     auth.useDeviceLanguage();
@@ -99,6 +99,42 @@ function verifyCode(code, type) {
         }
       });
 }
+
+// 寫入資料
+function writeDate(jsonData) {
+
+    firebase.database().ref(refPath).set(jsonData, (error) => {
+        if (error) {
+            console.error("The write failed... : " + error);
+        } else {
+            console.log("Data saved successfully!");
+        }
+    });
+}
+
+// 修改與擴充資料
+function updateDate(jsonData) {
+    firebase.database().ref(refPath).update(jsonData, (error) => {
+        if (error) {
+            console.error("The update failed... : " + error);
+        } else {
+            console.log("Data updated successfully!");
+        }
+    });
+}
+
+/*function writeLoginData(phoneNumber, password) {    
+    firebase.database().ref('phone/' + phoneNumber).set({
+        phoneNumber: phoneNumber,
+        password: password
+    }, (error) => {
+        if (error) {
+            console.error("The write failed... : " + error);
+        } else {
+            console.log("Data saved successfully!");
+        }
+    });
+}*/
 
 //當文檔加載完成時
 document.addEventListener('DOMContentLoaded', (event) => {

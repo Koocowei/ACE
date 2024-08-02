@@ -169,7 +169,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     string recodePassword;                                          //紀錄的密碼
     DateTime codeStartTime;                                         //發送OTP倒數開始時間
     WalletEnum currConnectingWallet;                                //當前連接錢包
-    string CurrVerifyPhoneNumber;                                   //當前OTP驗證手機號
+    string currVerifyPhoneNumber;                                   //當前OTP驗證手機號
+    string currVerifyPsw;                                           //當前驗證密碼
 
     List<TMP_InputField> currIfList = new List<TMP_InputField>();   //當前可切換InputFild
     UnityAction KybordEnterAction;                                  //Enter鍵執行方法
@@ -798,7 +799,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     /// <param name="phoneNumber">手機號</param>
     private void SendOTP(string phoneNumber)
     {
-        CurrVerifyPhoneNumber = phoneNumber;
+        currVerifyPhoneNumber = phoneNumber;
         JSBridgeManager.Instance.TriggerRecaptcha(phoneNumber);
 
         codeStartTime = DateTime.Now;
@@ -1002,7 +1003,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             RegisterPrivacyError_Txt.text = LanguageManager.Instance.GetText("Please Agree To The Privacy Policy.");
         }
 
-        if (phoneNumber != CurrVerifyPhoneNumber)
+        if (phoneNumber != currVerifyPhoneNumber)
         {
             //輸入手機號與驗證手機號不符
             isCorrect = false;
@@ -1013,6 +1014,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         {
             //資料正確    
             Debug.Log($"Register Submit = Phone:{phoneNumber} / Code:{code} / Password:{psw}");
+
+            currVerifyPsw = psw;
 
             RegisterNumberError_Txt.text = "";
             RegisterCodeError_Txt.text = "";
@@ -1033,6 +1036,15 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
         //設定TAB切換與Enter提交方法
         KybordEnterAction = RegisterSuccessSignIn;
+
+        //寫入資料
+        Dictionary<string, object> dataDic = new()
+        {
+            { "phoneNumber", currVerifyPhoneNumber },
+            { "password", currVerifyPsw }
+        };
+        JSBridgeManager.Instance.WriteDataFromFirebase($"phone/{currVerifyPhoneNumber}",
+                                                        dataDic);
     }
 
     /// <summary>
@@ -1086,7 +1098,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             LostPswPasswordError_Txt.text = LanguageManager.Instance.GetText("Invalid Code, Please Try Again.");
         }
 
-        if (phoneNumber != CurrVerifyPhoneNumber)
+        if (phoneNumber != currVerifyPhoneNumber)
         {
             //輸入框手機號與驗證手機號不符
             isCorrect = false;
@@ -1111,6 +1123,15 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void OnLostPswSuccess()
     {
+        //修改資料
+        Dictionary<string, object> dataDic = new()
+        {
+            { "phoneNumber", currVerifyPhoneNumber },
+            { "password", currVerifyPsw }
+        };
+        JSBridgeManager.Instance.UpdateDataFromFirebase($"phone/{currVerifyPhoneNumber}",
+                                                     dataDic);
+
         OnMobileSignInInit();
     }
 
@@ -1394,7 +1415,7 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
             isCorrect = false;
         }
 
-        if (phoneNumber != CurrVerifyPhoneNumber)
+        if (phoneNumber != currVerifyPhoneNumber)
         {
             //輸入框手機號與驗證手機號不符
             isCorrect = false;
