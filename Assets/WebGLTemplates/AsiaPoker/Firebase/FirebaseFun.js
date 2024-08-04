@@ -28,7 +28,7 @@ function setupRecaptchaVerifier() {
         }
     });
 
-    recaptchaVerifier.render().then((widgetId) => {
+    window.recaptchaVerifier.render().then((widgetId) => {
         window.recaptchaWidgetId = widgetId;
     });
 }
@@ -47,16 +47,9 @@ function signInWithPhoneNumber() {
         });
 }
 
-// 觸發Recaptcha驗證
-function triggerRecaptcha(phoneNumber) {
-    window.currPhoneNumber = phoneNumber;
-    console.log('Phone number set for reCAPTCHA:', phoneNumber);
-    document.getElementById('recaptcha-button').click();
-}
-
 // 驗證OTP 
 function verifyCode(code, type) {
-    confirmationResult.confirm(code).then((result) => {
+    window.confirmationResult.confirm(code).then((result) => {
         console.log("User signed in successfully!!!");
         const user = result.user;
 
@@ -64,17 +57,17 @@ function verifyCode(code, type) {
         {
             //錢包登入
             case "Wallet":
-                window.unityInstance.SendMessage("LoginView", "OnWalletLoginSuccess");
+                window.unityInstance.SendMessage("LoginView", "OnWalletOTPSuccess");
                 break;
 
             //手機註冊
             case "Register":
-                window.unityInstance.SendMessage("LoginView", "OnRegisterSuccess");
+                window.unityInstance.SendMessage("LoginView", "OnRegisterOTPSuccess");
                 break;
             
             //忘記密碼
             case "LostPsw":
-                window.unityInstance.SendMessage("LoginView", "OnLostPswSuccess");
+                window.unityInstance.SendMessage("LoginView", "OnLostPswOTPSuccess");
                 break;
         }
       }).catch((error) => {
@@ -100,6 +93,14 @@ function verifyCode(code, type) {
       });
 }
 
+/*
+// 觸發Recaptcha驗證
+function triggerRecaptcha(phoneNumber) {
+    window.currPhoneNumber = phoneNumber;
+    console.log('Phone number set for reCAPTCHA:', phoneNumber);
+    document.getElementById('recaptcha-button').click();
+}
+
 // 寫入資料
 function writeDate(jsonData) {
 
@@ -122,7 +123,7 @@ function updateDate(jsonData) {
         }
     });
 }
-
+*/
 /*function writeLoginData(phoneNumber, password) {    
     firebase.database().ref('phone/' + phoneNumber).set({
         phoneNumber: phoneNumber,

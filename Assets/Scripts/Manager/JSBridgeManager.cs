@@ -62,30 +62,60 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     #region Firebase
 
     [DllImport("__Internal")]
-    private static extern bool JS_FirebaseVerifyCode(string code, string type);
+    private static extern bool JS_FirebaseVerifyCode(string code, string objNamePtr, string callbackFunPtr);
     /// <summary>
     /// 驗證OTP
     /// </summary>
     /// <param name="code">OTP Code</param>
-    /// <param name="type">當前驗證類型</param>
-    public void FirebaseVerifyCode(string code, string type)
+    /// <param name="objNamePtr">回傳物件名</param>
+    /// <param name="callbackFunPtr">回傳方法名</param>
+    public void FirebaseVerifyCode(string code, string objNamePtr, string callbackFunPtr)
     {
         JS_FirebaseVerifyCode(code,
-                              type);
+                              objNamePtr,
+                              callbackFunPtr);
     }
 
     [DllImport("__Internal")]
-    private static extern bool JS_WriteDataFromFirebase(string refPathPtr, string jsonDataPtr);
+    private static extern bool JS_StartListeningForDataChanges(string pathPtr, string objNamePtr, string callbackFunPtr);
+    /// <summary>
+    /// 開始監聽資料
+    /// </summary>
+    /// <param name="pathPtr">資料路徑</param>
+    /// <param name="objNamePtr">回傳物件名</param>
+    /// <param name="callbackFunPtr">回傳方法名</param>
+    public void StartListeningForDataChanges(string pathPtr, string objNamePtr, string callbackFunPtr)
+    {
+        JS_StartListeningForDataChanges(pathPtr,
+                                        objNamePtr,
+                                        callbackFunPtr);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_StopListeningForDataChanges(string pathPtr);
+    /// <summary>
+    /// 停止監聽資料
+    /// </summary>
+    /// <param name="pathPtr">資料路徑</param>
+    public void StopListeningForDataChanges(string pathPtr)
+    {
+        JS_StopListeningForDataChanges(pathPtr);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_WriteDataFromFirebase(string refPathPtr, string jsonDataPtr, string objNamePtr = null, string callbackFunPtr = null);
     /// <summary>
     /// 寫入資料
     /// </summary>
     /// <param name="refPathPtr">資料路徑</param>
     /// <param name="data">資料</param>
-    public void WriteDataFromFirebase(string refPathPtr, Dictionary<string, object> data)
+    public void WriteDataFromFirebase(string refPathPtr, Dictionary<string, object> data, string objNamePtr = null, string callbackFunPtr = null)
     {
         string jsonData = JsonConvert.SerializeObject(data);
         JS_WriteDataFromFirebase(refPathPtr,
-                                 jsonData);
+                                 jsonData,
+                                 objNamePtr,
+                                 callbackFunPtr);
     }
 
     [DllImport("__Internal")]
@@ -113,22 +143,52 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     public void ReadDataFromFirebase(string refPathPtr, string objNamePtr, string callbackFunPtr)
     {
         JS_ReadDataFromFirebase(refPathPtr,
-                                "FirebaseManager",
-                                "OnFirebaseDataRead");
+                                objNamePtr,
+                                callbackFunPtr);
     }
 
-    /*[DllImport("__Internal")]
-    private static extern bool JS_FirebaseWriteLoginData(string code, string type);
+    [DllImport("__Internal")]
+    private static extern bool JS_RemoveDataFromFirebase(string refPathPtr, string objNamePtr, string callbackFunPtr);
     /// <summary>
-    /// 寫入登入資料
+    /// 移除資料
     /// </summary>
-    /// <param name="phone">手機號</param>
-    /// <param name="pse">密碼</param>
-    public void FirebaseWriteLoginData(string phone, string pse)
+    /// <param name="refPathPtr">資料路徑</param>
+    /// <param name="objNamePtr">回傳物件名</param>
+    /// <param name="callbackFunPtr">回傳方法名</param>
+    public void RemoveDataFromFirebase(string refPathPtr, string objNamePtr, string callbackFunPtr)
     {
-        JS_FirebaseWriteLoginData(phone,
-                                  pse);
-    }*/
+        JS_RemoveDataFromFirebase(refPathPtr,
+                                  objNamePtr,
+                                  callbackFunPtr);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_CheckUserDataExist(string keyPtr, string objNamePtr, string callbackFunPtr);
+    /// <summary>
+    /// 檢查用戶資料是否已存在(邀請碼/UserID/暱稱)
+    /// </summary>
+    /// <param name="keyPtr">資料路徑</param>
+    /// <param name="objNamePtr">回傳物件名</param>
+    /// <param name="callbackFunPtr">回傳方法名</param>
+    public void CheckUserDataExist(string keyPtr, string objNamePtr, string callbackFunPtr)
+    {
+        JS_CheckUserDataExist(keyPtr,
+                              objNamePtr,
+                              callbackFunPtr);
+    }
+
+    [DllImport("__Internal")]
+    private static extern bool JS_UpdateBoundInviterId(string inviteCode, string inviterId);
+    /// <summary>
+    /// 更新邀請碼對象的綁定邀請者
+    /// </summary>
+    /// <param name="inviteCode">資料路徑</param>
+    /// <param name="inviterId">回傳物件名</param>
+    public void UpdateBoundInviterId(string inviteCode, string inviterId)
+    {
+        JS_UpdateBoundInviterId(inviteCode,
+                                inviterId);
+    }
 
     #endregion
 
@@ -161,6 +221,16 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     #endregion
 
     #region 工具
+
+    [DllImport("__Internal")]
+    private static extern bool JS_ClearUrlQueryString();
+    /// <summary>
+    /// 清除URL資料
+    /// </summary>
+    public void ClearUrlQueryString()
+    {
+        JS_ClearUrlQueryString();
+    }
 
     [DllImport("__Internal")]
     private static extern bool JS_Share(string title, string content, string url);

@@ -605,7 +605,7 @@ public class GameView : MonoBehaviour
         //選單玩家訊息
         StringUtils.StrExceedSize(DataManager.UserWalletAddress, MenuWalletAddr_Txt);
         MenuNickname_Txt.text = $"@{DataManager.UserNickname}";
-        MenuAvatar_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatar];
+        MenuAvatar_Img.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatarIndex];
 
         SetNotReadChatCount = 0;
 
@@ -2196,7 +2196,7 @@ public class GameView : MonoBehaviour
         }
 
         baseRequest.SendRequestRequest_Chat(Chat_If.text);
-        CreateChatContent(DataManager.UserAvatar,
+        CreateChatContent(DataManager.UserAvatarIndex,
                           DataManager.UserNickname,
                           Chat_If.text,
                           true);

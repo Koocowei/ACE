@@ -2,21 +2,7 @@ mergeInto(LibraryManager.library, {
 
     //設置Recaptcha驗證監聽
     JS_SetupRecaptchaVerifier: function() {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-button', {
-            'size': 'invisible',
-            'callback': (response) => {
-                console.log('reCAPTCHA solved');
-                signInWithPhoneNumber();
-            }
-        });
-
-        recaptchaVerifier.render().then((widgetId) => {
-            window.recaptchaWidgetId = widgetId;
-        });
-
-
-
-        //window.setupRecaptchaVerifier();
+        window.setupRecaptchaVerifier();
     },
 
     //開啟Recaptcha小工具
@@ -41,12 +27,8 @@ mergeInto(LibraryManager.library, {
 
     //觸發Recaptcha驗證
     JS_TriggerRecaptcha: function(phoneNumber) {
-        window.currPhoneNumber = phoneNumber;
-        console.log('Phone number set for reCAPTCHA:', phoneNumber);
+        window.currPhoneNumber = UTF8ToString(phoneNumber);
+        console.log('Phone number set for reCAPTCHA:', window.currPhoneNumber);
         document.getElementById('recaptcha-button').click();
-
-
-
-        //window.triggerRecaptcha(UTF8ToString(phoneNumber));
     },
 });

@@ -1,5 +1,18 @@
 mergeInto(LibraryManager.library, {
 
+    //清除URL資料
+    JS_ClearUrlQueryString: function() {
+        // 获取当前的URL
+        var url = window.location.href;
+
+        // 如果URL中包含查询字符串，则清除它
+        if (url.indexOf('?') > -1) {
+            // 使用history.replaceState来替换当前的URL
+            var newUrl = url.split('?')[0];
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    },
+
     //分享
     JS_Share: function(titleStr, contentStr, urlStr){
         var title = UTF8ToString(titleStr);

@@ -190,12 +190,12 @@
                         const state = urlParams.get('state');
                         if (code && state) {
                             //Line登入回傳
-                            onLineLoginCallback(code, state);
+                            window.unityInstance.SendMessage('ThirdLoginManager', 'OnLineLoginCallback', code);
                         }
-                        if(code) {
+                        if(code && state == null) {
                             //IG登入回傳
-                            onIGLoginCallback(code);
-                        }
+                            window.unityInstance.SendMessage('Entry', 'OnIGLoginCallback', code);
+                        }                        
 
                         // 放置接收代碼的 JavaScript
                         function getQueryParams() {
@@ -210,10 +210,15 @@
                         }
                         //新開頁面解析URL
                         const queryParams = getQueryParams();
+                        //Line郵箱
                         const lineMail = queryParams['linemail'];
+                        //IG Id與名子
                         const igIdAndName = queryParams['igIdAndName'];
+                        //邀請碼
+                        const invitationCode = queryParams['invitationCode'];
                         instance.SendMessage('Entry', 'HtmlDebug', 'lineMail:'+lineMail);
                         instance.SendMessage('Entry', 'HtmlDebug', 'igIdAndName:'+igIdAndName);
+                        instance.SendMessage('Entry', 'HtmlDebug', 'invitationCode:'+invitationCode);
                         if(lineMail) {
                             //Line
                             instance.SendMessage('Entry', 'ReceiveLineMail', lineMail);
@@ -221,9 +226,11 @@
                         if(igIdAndName) {
                             //IG
                             instance.SendMessage('Entry', 'ReceiveIGInfo', igIdAndName);
-                        }                      
-
-                        
+                        }
+                        if(invitationCode) {
+                            //接收邀請碼
+                            window.unityInstance.SendMessage('Entry', 'ReceiveInvitationCode', invitationCode);
+                        }
 
                     }).catch((message) => {
                         alert(message);
@@ -232,28 +239,6 @@
             };
             document.body.appendChild(script);
         };
-
-        //Line登入傳遞授權碼
-        function onLineLoginCallback(code, state) {
-            if (window.unityInstance) {
-                console.log("Line Login And Get Code:" + code + ' Line State:' + state);
-                window.unityInstance.SendMessage('Entry', 'OnLineLoginCallback', code);
-
-            } else {
-                console.error("Unity instance not found.");
-            }
-        }
-
-        //IG登入傳遞授權碼
-        function onIGLoginCallback(code) {
-            if (window.unityInstance) {
-                console.log("IG Login And Get Code:" + code);
-                window.unityInstance.SendMessage('Entry', 'OnIGLoginCallback', code);
-
-            } else {
-                console.error("Unity instance not found.");
-            }
-        }
 
     </script>
 </body>

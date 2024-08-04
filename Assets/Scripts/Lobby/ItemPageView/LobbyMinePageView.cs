@@ -78,8 +78,9 @@ public class LobbyMinePageView : MonoBehaviour
     [SerializeField]
     Image InvitationQRCode_Img;
     [SerializeField]
-    TextMeshProUGUI InvitationCodeTitle_Txt, InvitationCodeShareBtn_Txt, 
-                    InvitationCode_Txt, CopiedInvitationCode_Txt;
+    TextMeshProUGUI InvitationCodeTitle_Txt, InvitationCodeShareBtn_Txt,
+                    InvitationCodeContentTitle_Txt, InvitationCode_Txt, CopiedInvitationCode_Txt,
+                    BoundInviterTitle_Txt, BoundInviterId_Txt, HasBoundInviter_Txt;
 
     [Header("交易紀錄")]
     [SerializeField]
@@ -169,7 +170,10 @@ public class LobbyMinePageView : MonoBehaviour
 
         #region 邀請碼
 
-        InvitationCodeTitle_Txt.text = LanguageManager.Instance.GetText("Invitation code");
+        InvitationCodeTitle_Txt.text = LanguageManager.Instance.GetText("Invitation Code");
+        HasBoundInviter_Txt.text = LanguageManager.Instance.GetText("Bound");
+        InvitationCodeContentTitle_Txt.text = LanguageManager.Instance.GetText("Invitation Code");
+        BoundInviterTitle_Txt.text = LanguageManager.Instance.GetText("Bound Inviter");
         InvitationCodeShareBtn_Txt.text = LanguageManager.Instance.GetText("Share");
 
         #endregion
@@ -219,7 +223,7 @@ public class LobbyMinePageView : MonoBehaviour
         CopiedInvitationCode_Txt.color = color;
 
         //邀請碼內容
-        StringUtils.StrExceedSize(DataManager.UserInviteCode,
+        StringUtils.StrExceedSize(DataManager.UserInvitationCode,
                                   InvitationCode_Txt);
 
         ChangeAvatar_Tr.gameObject.SetActive(false);
@@ -279,9 +283,18 @@ public class LobbyMinePageView : MonoBehaviour
         //提交更換頭像
         ChangeAvatarSubmit_Btn.onClick.AddListener(() =>
         {
-            DataManager.UserAvatar = tempAvatarIndex;
-            EditorAvatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatar];
-            GameObject.FindAnyObjectByType<LobbyView>().UpdateUserInfo();
+            DataManager.UserAvatarIndex = tempAvatarIndex;
+
+            //寫入資料
+            Dictionary<string, object> dataDic = new()
+            {
+                { FirebaseManager.AVATAR_INDEX, DataManager.UserAvatarIndex },
+            };
+            JSBridgeManager.Instance.UpdateDataFromFirebase($"{Entry.Instance.releaseType}/{FirebaseManager.USER_DATA_PATH}{DataManager.UserLoginType}/{DataManager.UserLoginPhoneNumber}",
+                                                           dataDic);
+
+            EditorAvatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatarIndex];
+            GameObject.FindAnyObjectByType<LobbyView>().UpdateUserData();
 
             UserPorfile_Obj.SetActive(true);
             ChangeAvatar_Tr.gameObject.SetActive(false);
@@ -333,8 +346,10 @@ public class LobbyMinePageView : MonoBehaviour
         InvitationCodeShare_Btn.onClick.AddListener(() =>
         {
             string title = LanguageManager.Instance.GetText("Invitation Code");
-            string content = LanguageManager.Instance.GetText("Asia Poker");
-            string url = "https://kooco.github.io/ACEdemo/demo.asiapoker/index.html";
+            string content = $"{LanguageManager.Instance.GetText("Asia Poker")}\n" +
+                             $"{LanguageManager.Instance.GetText("InvitationCode")} : {DataManager.UserInvitationCode}";
+            string url = $"{DataManager.GetRedirectUri()}" +
+                         $"?{FirebaseManager.INVITATION_CODE}={DataManager.UserInvitationCode}";
             JSBridgeManager.Instance.Share(title,
                                            content,
                                            url);
@@ -345,7 +360,7 @@ public class LobbyMinePageView : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(InvitationCode_Txt.text))
             {
-                StringUtils.CopyText(DataManager.UserInviteCode);
+                StringUtils.CopyText(DataManager.UserInvitationCode);
                 UnityUtils.Instance.ColorFade(CopiedInvitationCode_Txt,
                                               null,
                                               0.2f,
@@ -443,11 +458,8 @@ public class LobbyMinePageView : MonoBehaviour
 
             avatarBtnList.Add(avatarBtn);
         }
-        SelectAvatarIcon_Tr.SetParent(avatarBtnList[DataManager.UserAvatar].transform);
+        SelectAvatarIcon_Tr.SetParent(avatarBtnList[DataManager.UserAvatarIndex].transform);
         SelectAvatarIcon_Tr.anchoredPosition = Vector2.zero;
-
-        //產生分享RQ Code
-        InvitationQRCode_Img.sprite = Utils.GenerateQRCodeTexture("https://kooco.github.io/ACEdemo/demo.asiapoker/index.html");
 
         Viewport.enabled = true;
 
@@ -458,6 +470,7 @@ public class LobbyMinePageView : MonoBehaviour
                               DataManager.UserOTProps);
 
         UpdateScoreRecord(50, 60, 70, 80);
+        UpdateInvitationCodeInfo();
     }
 
     /// <summary>
@@ -466,7 +479,7 @@ public class LobbyMinePageView : MonoBehaviour
     private void SetUserInfo()
     {
         //頭像
-        EditorAvatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatar];
+        EditorAvatar_Btn.image.sprite = AssetsManager.Instance.GetAlbumAsset(AlbumEnum.AvatarAlbum).album[DataManager.UserAvatarIndex];
 
         //暱稱
         Nickname_Txt.text = $"@{DataManager.UserNickname}";
@@ -486,12 +499,12 @@ public class LobbyMinePageView : MonoBehaviour
                         AssetsManager.Instance.GetAlbumAsset(AlbumEnum.LinkAlbum).album[1];
 
         //Line連接
-        LineNotYetLinked_Obj.SetActive(string.IsNullOrEmpty(DataManager.LineMail));
-        LineLink_Btn.interactable = string.IsNullOrEmpty(DataManager.IGIUserIdAndName);
-        LineLinked_Txt.text = string.IsNullOrEmpty(DataManager.LineMail) ?
+        LineNotYetLinked_Obj.SetActive(string.IsNullOrEmpty(DataManager.GetLineToken));
+        LineLink_Btn.interactable = string.IsNullOrEmpty(DataManager.GetLineToken);
+        LineLinked_Txt.text = string.IsNullOrEmpty(DataManager.GetLineToken) ?
                             LanguageManager.Instance.GetText("LINK NOW") :
                             LanguageManager.Instance.GetText("LINKED");
-        LineLinked_Img.sprite = string.IsNullOrEmpty(DataManager.LineMail) ?
+        LineLinked_Img.sprite = string.IsNullOrEmpty(DataManager.GetLineToken) ?
                                 AssetsManager.Instance.GetAlbumAsset(AlbumEnum.LinkAlbum).album[0] :
                                 AssetsManager.Instance.GetAlbumAsset(AlbumEnum.LinkAlbum).album[1];
     }
@@ -518,7 +531,7 @@ public class LobbyMinePageView : MonoBehaviour
         StaminaValue_Txt.text = $"{DataManager.UserStamina}/{DataManager.MaxStaminaValue}";
         OTPropsValue_Txt.text = $"{DataManager.UserOTProps}";
 
-        GameObject.FindAnyObjectByType<LobbyView>().UpdateUserInfo();
+        GameObject.FindAnyObjectByType<LobbyView>().UpdateUserData();
     }
 
     /// <summary>
@@ -610,10 +623,9 @@ public class LobbyMinePageView : MonoBehaviour
         string nonce = GenerateRandomString();
         string authUrl = $"https://access.line.me/oauth2/v2.1/authorize?response_type=code&" +
                          $"client_id={DataManager.LineChannelId}&" +
-                         $"redirect_uri={DataManager.RedirectUri}&" +
+                         $"redirect_uri={DataManager.GetRedirectUri()}&" +
                          $"state={state}&" +
                          $"scope=profile%20openid%20email&nonce={nonce}";
-
 
         JSBridgeManager.Instance.LocationHref(authUrl);
     }
@@ -625,4 +637,20 @@ public class LobbyMinePageView : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// 更新邀請碼訊息
+    /// </summary>
+    public void UpdateInvitationCodeInfo()
+    {
+        //綁定的邀請者ID
+        StringUtils.StrExceedSize(DataManager.UserBoundInviterId,
+                                  BoundInviterId_Txt);
+        //產生分享RQ Code
+        InvitationQRCode_Img.sprite = Utils.GenerateQRCodeTexture($"{DataManager.GetRedirectUri()}?{FirebaseManager.INVITATION_CODE}={DataManager.UserInvitationCode}");
+        //邀請碼區域顯示設定
+        InvitationQRCode_Img.gameObject.SetActive(string.IsNullOrEmpty(DataManager.UserBoundInviterId));
+        HasBoundInviter_Txt.gameObject.SetActive(!string.IsNullOrEmpty(DataManager.UserBoundInviterId));
+        InvitationCodeShare_Btn.interactable = string.IsNullOrEmpty(DataManager.UserBoundInviterId);
+    }
 }
