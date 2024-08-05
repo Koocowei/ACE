@@ -307,4 +307,14 @@ public class JSBridgeManager : UnitySingleton<JSBridgeManager>
     }
 
     #endregion
+
+    //  Line加客服好友
+    [DllImport("__Internal")]
+    private static extern void JS_LineService(string url);
+
+    public void onLineService(string url)
+    {
+        JS_LineService(url);
+    }
+
 }
