@@ -146,6 +146,7 @@ public class GameView : MonoBehaviour
 
     Vector2 InitPotPointPos;                                    //初始底池位置
     int notReadMsgCount;                                        //未讀取數
+    bool isNextRountSitOut;                                     //是否下局保留作位離開
 
     #region 遊戲過程紀錄
 
@@ -377,7 +378,13 @@ public class GameView : MonoBehaviour
         {
             thisData.IsSitOut = !thisData.IsSitOut;
             SetSitOutDisplay();
-            baseRequest.SendRequest_SitOut(thisData.IsSitOut);
+
+            var data = new Dictionary<string, object>()
+            {
+                { FirebaseManager.IS_SIT_OUT, thisData.IsSitOut},         //是否保留座位離開
+            };
+            gameControl.UpdataPlayerData(DataManager.UserId,
+                                         data);
 
             CloseMenu();
         });
@@ -1007,6 +1014,8 @@ public class GameView : MonoBehaviour
             }
         }
 
+        AutoActionState = AutoActingEnum.None;
+
         gameControl.UpdateBetAction(DataManager.UserId,
                                     acting,
                                     betValue);
@@ -1065,19 +1074,7 @@ public class GameView : MonoBehaviour
                                                                           .Value;
 
         //首位加注玩家
-        bool isFirst = false;
-        if ((GameFlowEnum)gameRoomData.currGameFlow == GameFlowEnum.SetBlind &&
-            gameRoomData.actionPlayerCount == 1)
-        {
-            isFirst = true;
-        }
-        else
-        {
-            if (gameRoomData.actionPlayerCount == 0)
-            {
-                isFirst = true;
-            }
-        }
+        bool isFirst = gameRoomData.actionPlayerCount == 0;
 
         //是否無法加注
         double allInMin = gameControl.GetAllInPlayer().Count > 0 ?
@@ -1149,14 +1146,7 @@ public class GameView : MonoBehaviour
             case AutoActingEnum.Check:
                 if (thisData.IsFirstRaisePlayer == true)
                 {
-                    if (thisData.CurrCallValue == thisData.SmallBlindValue)
-                    {
-                        OnCallAndCheck();
-                    }
-                    else
-                    {
-                        ShowBetArea();
-                    }
+                    OnCallAndCheck();
                 }
                 else
                 {
@@ -1240,16 +1230,8 @@ public class GameView : MonoBehaviour
         strData.CallValueStr = $"\n{StringUtils.SetChipsUnit(thisData.CurrCallValue - thisData.CallDifference)}";
         if (thisData.IsFirstRaisePlayer == true)
         {
-            if (thisData.CurrCallValue == thisData.SmallBlindValue * 2)
-            {
-                strData.CallStr = "Check";
-                strData.CallValueStr = "";
-            }
-            else
-            {
-                strData.CallStr = "Call";
-                strData.CallValueStr = $"\n{StringUtils.SetChipsUnit(thisData.CallDifference)}";
-            }
+            strData.CallStr = "Check";
+            strData.CallValueStr = "";
         }
         else
         {
@@ -1329,6 +1311,8 @@ public class GameView : MonoBehaviour
     /// <param name="gameRoomData">遊戲房間資料</param>
     public void UpdateGameRoomInfo(GameRoomData gameRoomData)
     {
+        Debug.Log("更新遊戲房間訊息");
+
         //清除座位上玩家
         for (int i = 1; i < SeatGamePlayerInfoList.Count; i++)
         {
@@ -1344,10 +1328,17 @@ public class GameView : MonoBehaviour
         foreach (var player in gameRoomData.playerDataDic.Values)
         {
             GamePlayerInfo gamePlayerInfo = AddPlayer(player);
+
             if (player.userId != DataManager.UserId &&
                 gameRoomData.playingPlayersIdList.Contains(player.userId))
             {
+                gamePlayerInfo.SetPokerShapeTxtStr = "";
                 gamePlayerInfo.SetHandPoker(-1, -1);
+            }
+            else
+            {
+                //本地玩家
+                JudgePokerShape(gamePlayerInfo, false);
             }
             if (player.currAllBetChips > 0)
             {
@@ -1359,7 +1350,7 @@ public class GameView : MonoBehaviour
         SetTotalPot = gameRoomData.potChips;
         if ((int)gameRoomData.currGameFlow >= 2)
         {
-            SetPotActive = true;
+            //SetPotActive = true;
         }
 
         //公共牌
@@ -1726,6 +1717,7 @@ public class GameView : MonoBehaviour
     /// <returns></returns>
     public IEnumerator IPotResult(GameRoomData gameRoomData)
     {
+        thisData.IsPlaying = false;
         SetActingButtonEnable = false;
         thisData.CurrCommunityPoker = new List<int>();
 
@@ -2009,6 +2001,7 @@ public class GameView : MonoBehaviour
     /// <returns></returns>
     public IEnumerator IGameStage(GameRoomData gameRoomData, double smallBlind)
     {
+        AutoActionState = AutoActingEnum.None;
         thisData.SmallBlindValue = smallBlind;
         thisData.CurrRaiseValue = thisData.SmallBlindValue * 2;
 
@@ -2040,7 +2033,6 @@ public class GameView : MonoBehaviour
             case GameFlowEnum.Licensing:
                 SavePreGame();
                 //GameInit();
-                WaitingTip_Txt.text = "";
 
                 //HandPokerLicensing(pack.LicensingStagePack.HandPokerDic);
                 //SetButtonSeat(pack.LicensingStagePack.ButtonSeatId);
@@ -2050,8 +2042,9 @@ public class GameView : MonoBehaviour
 
             //大小盲
             case GameFlowEnum.SetBlind:
-               /* SetActingButtonEnable = thisData.IsPlaying;
-                SetTotalPot = pack.GameRoomInfoPack.TotalPot;
+                SetActingButtonEnable = thisData.IsPlaying;
+
+               /* SetTotalPot = pack.GameRoomInfoPack.TotalPot;
                 SetBlind(pack.BlindStagePack);
 
                 gameInitHistoryData = HandHistoryManager.Instance.SetGameInitData(gamePlayerInfoList,
@@ -2438,6 +2431,7 @@ public class GameView : MonoBehaviour
         {
             GamePlayerInfo gamePlayerInfo = GetPlayer(userId);
 
+            gamePlayerInfo.Init();
             //重製座位角色
             gamePlayerInfo.SetSeatCharacter(SeatCharacterEnum.None);
 
@@ -2449,15 +2443,28 @@ public class GameView : MonoBehaviour
                                                                           .FirstOrDefault()
                                                                           .Value;
 
-                gamePlayerInfo.SetHandPoker(playerData.handPoker[0],
-                                            playerData.handPoker[1]);
+                //沒有離座
+                if (playerData.isSitOut == false)
+                {
+                    thisData.IsPlaying = true;
+                    gamePlayerInfo.SetHandPoker(playerData.handPoker[0],
+                                                playerData.handPoker[1]);
 
-                WaitingTip_Txt.text = "";
+                    WaitingTip_Txt.text = "";
+
+                    //判斷牌行
+                    if (gameRoomData.playingPlayersIdList.Contains(DataManager.UserId))
+                    {
+                        JudgePokerShape(gamePlayerInfo,
+                                        true);
+                    }
+                }
             }
             else
             {
                 //其他玩家
                 gamePlayerInfo.SetHandPoker(-1, -1);
+                gamePlayerInfo.SetPokerShapeTxtStr = "";
             }
         }
 

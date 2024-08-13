@@ -52,6 +52,7 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     public const string CURR_ALL_BET_CHIPS = "currAllBetChips";                             //該回合總下注籌碼
     public const string ALL_BET_CHIPS = "allBetChips";                                      //該局總下注籌碼
     public const string IS_BET = "isBet";                                                   //該流程是否已下注
+    public const string IS_SIT_OUT = "isSitOut";                                            //是否保留座位離開
 
     [Header("下注行為")]
     public const string BET_ACTIONER_ID = "betActionerId";                                  //下注玩家ID
@@ -213,6 +214,7 @@ public class GameRoomPlayerData
     public double currAllBetChips;                  //當前流程總下注籌碼
     public double allBetChips;                      //該局總下注籌碼
     public bool isBet;                              //該流程是否已下注
+    public bool isSitOut;                           //是否保留座位離開
 }
 
 /// <summary>
