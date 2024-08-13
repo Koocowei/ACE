@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.Threading;
 public class Entry : UnitySingleton<Entry>
 {
     #region 測試
@@ -87,7 +88,6 @@ public class Entry : UnitySingleton<Entry>
                 HandHistoryManager.Instance.OnDeleteHistoryData();
             }
         }
-
         #endregion
     }
 
