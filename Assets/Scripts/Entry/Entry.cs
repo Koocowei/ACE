@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
-using UnityEngine.UI;
-using System.Linq;
 
 public class Entry : UnitySingleton<Entry>
 {
@@ -89,7 +87,6 @@ public class Entry : UnitySingleton<Entry>
                 HandHistoryManager.Instance.OnDeleteHistoryData();
             }
         }
-
         #endregion
     }
 
