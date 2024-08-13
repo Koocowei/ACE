@@ -142,6 +142,8 @@ public class CheckUserData
 [Serializable]
 public class AccountData
 {
+    public bool online;                     //在線狀態
+    public long last_changed;               //最後更新時間
     public string userId;                   //用戶ID
     public string phoneNumber;              //登入手機號
     public string password;                 //登入密碼
@@ -280,13 +282,14 @@ public enum PlayerStateEnum
 public enum GameFlowEnum
 {
     None,
-    Licensing,          //發牌
-    SetBlind,           //大小盲
-    Flop,               //翻牌
-    Turn,               //轉牌
-    River,              //河牌
-    PotResult,          //底池結果
-    SideResult,          //邊池結果
+    Licensing,                  //發牌
+    SetBlind,                   //大小盲
+    Flop,                       //翻牌
+    Turn,                       //轉牌
+    River,                      //河牌
+    PotResult,                  //底池結果
+    SideResult,                 //邊池結果
+    OnePlayerLeftResult,        //剩餘1名玩家結果
 }
 
 /// <summary>

@@ -1632,7 +1632,10 @@ public class GameView : MonoBehaviour
             }
         }
 
-        thisData.CurrCommunityPoker = currCommunityPoker;
+        if (currCommunityPoker != null)
+        {
+            thisData.CurrCommunityPoker = currCommunityPoker;
+        }        
 
         //本地玩家
         GameRoomPlayerData localPlayer = gameControl.GetLocalPlayer();
@@ -1669,7 +1672,7 @@ public class GameView : MonoBehaviour
         if (thisData.IsPlaying == true)
         {
             GamePlayerInfo localPlayerInfo = gamePlayerInfoList.Where(x => x.UserId == DataManager.UserId)
-                                                           .FirstOrDefault();
+                                                               .FirstOrDefault();
             JudgePokerShape(localPlayerInfo, 
                             true);
         }
@@ -1724,9 +1727,10 @@ public class GameView : MonoBehaviour
     public IEnumerator IPotResult(GameRoomData gameRoomData)
     {
         SetActingButtonEnable = false;
+        thisData.CurrCommunityPoker = new List<int>();
 
         yield return IConcentrateBetChips();
-        yield return IFlopCommunityPoker(gameRoomData.communityPoker);
+        yield return IFlopCommunityPoker(gameRoomData.currCommunityPoker);
 
         //顯示手牌牌型
         foreach (var potWinnerId in gameRoomData.potWinData.potWinnersId)

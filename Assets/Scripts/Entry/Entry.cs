@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.Linq;
+
 public class Entry : UnitySingleton<Entry>
 {
     #region 測試
@@ -89,7 +91,7 @@ public class Entry : UnitySingleton<Entry>
         }
 
         #endregion
-    }    
+    }
 
     #region Instagram登入
 
