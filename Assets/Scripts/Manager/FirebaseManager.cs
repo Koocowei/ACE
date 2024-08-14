@@ -23,12 +23,13 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     public const string LINE_TOKEN = "lineToken";                                           //Line Token
 
     [Header("遊戲房間資料內容路徑名稱")]
-    public const string ROBOT_ID = "robot_";                                                //機器人ID
+    public const string ROBOT_ID = "robot";                                                 //機器人ID
     public const string PLAYER_DATA_LIST = "playerDataDic";                                 //房間內所有玩家列表路徑
     public const string PLAYING_PLAYER_ID = "playingPlayersIdList";                         //遊戲中玩家ID列表路徑
     public const string BET_ACTION_DATA = "betActionDataDic";                               //下注行為資料路徑
     public const string POT_WIN_DATA = "potWinData";                                        //底池獲勝資料路徑
     public const string SIDE_WIN_DATA = "sideWinData";                                      //邊池獲勝資料路徑
+    public const string BACK_CHIPS_DATA = "backChipsData";                                  //頹回醜馬資料路徑
     public const string SMALL_BLIND = "smallBlind";                                         //小盲值
     public const string ROBOT_INDEX = "robotIndex";                                         //機器人編號
     public const string ROOM_HOST_ID = "hostId";                                            //房主ID
@@ -38,6 +39,7 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     public const string BUTTON_SEAT = "buttonSeat";                                         //Button座位
     public const string ACTION_CD = "actionCD";                                             //行動倒數時間
     public const string CURR_ACTIONER_ID = "currActionerId";                                //當前行動玩家ID
+    public const string CURR_ACTIONER_SEAT = "currActionerSeat";                            //當前行動座位
     public const string CURR_CALL_VALUE = "currCallValue";                                  //當前跟注值
     public const string ACTIONP_PLAYER_COUNT = "actionPlayerCount";                         //當前流程行動玩家次數
 
@@ -62,13 +64,14 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
 
     [Header("底池獲勝資料")]
     public const string POT_WIN_CHIPS = "potWinChips";                                      //底池獲得籌碼
-    public const string POT_WINNERS_ID = "potWinnersId";                                    //底池獲得贏家ID
+    public const string POT_WINNERS_ID = "potWinnersId";                                    //底池贏家ID
     public const string IS_HAVE_SIDE = "isHaveSide";                                        //是否有邊池
 
     [Header("邊池獲勝資料")]
     public const string SIDE_WIN_CHIPS = "sideWinChips";                                     //邊池獲得籌碼
-    public const string SIDE_WINNERS_ID = "sideWinnersId";                                   //邊池獲得贏家ID
-    public const string BACK_CHIPS = "backChips";                                            //退回籌碼(格式:ID_退回籌碼)
+    public const string SIDE_WINNERS_ID = "sideWinnersId";                                   //邊池贏家ID
+    public const string BACK_USER_ID = "backUserId";                                         //退回籌碼用戶ID
+    public const string BACK_CHIPS_VALUE = "backChipsValue";                                 //退回籌碼值
 
     public override void Awake()
     {
@@ -191,6 +194,7 @@ public class GameRoomData
     public int robotIndex;                                              //機器人編號
     public int actionCD;                                                //行動倒數時間
     public string currActionerId;                                       //當前行動玩家Id
+    public int currActionerSeat;                                        //前行動座位
     public double currCallValue;                                        //當前跟注值
     public int actionPlayerCount;                                       //當前流程行動玩家次數
 }
@@ -236,7 +240,7 @@ public class BetActionData
 public class PotWinData
 {
     public double potWinChips;                                          //底池獲得籌碼
-    public List<string> potWinnersId;                                   //底池獲得贏家ID
+    public List<string> potWinnersId;                                   //底池贏家ID
     public bool isHaveSide;                                             //是否有邊池
 }
 
@@ -247,9 +251,17 @@ public class PotWinData
 public class SideWinData
 {
     public double sideWinChips;                                         //邊池獲得籌碼
-    public List<string> sideWinnersId;                                  //邊池獲得贏家ID
-    public List<string> backChips;                                      //退回籌碼(格式:ID_退回籌碼)
+    public List<string> sideWinnersId;                                  //邊池贏家ID
+    public Dictionary<string, BackChipsData> backChipsData;             //退回籌碼
+}
 
+/// <summary>
+/// 退回籌碼資料
+/// </summary>
+public class BackChipsData
+{
+    public string backUserId;                                           //用戶ID
+    public double backChipsValue;                                       //退回籌碼值
 }
 
 #endregion
