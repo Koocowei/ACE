@@ -15,6 +15,8 @@ using RotaryHeart.Lib.SerializableDictionary;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using NBitcoin;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 public class LoginView : MonoBehaviour, IPointerClickHandler
 {
@@ -198,6 +200,39 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     List<TMP_InputField> currIfList = new List<TMP_InputField>();               //當前可切換InputFild
     UnityAction KybordEnterAction;                                              //Enter鍵執行方法
 
+
+    /*
+    /// <summary>
+    /// 後台註冊資料
+    /// </summary>
+    [SerializeField]
+    private class Register
+    {
+        public string phoneNumber;
+        public string userName;
+        public string password;
+        public string confirmPassword;
+    }
+
+    /// <summary>
+    /// 後台登入資料
+    /// </summary>
+    [SerializeField]
+    private class Login
+    {
+        public string userNameOrEmailAddress;
+        public string password;
+    }
+    /// <summary>
+    /// 接收回傳資料
+    /// </summary>
+    private class Respon
+    {
+        public string responMsg;
+    }
+
+    */
+
     /// <summary>
     /// 紀錄當前連接錢包資料
     /// </summary>
@@ -265,8 +300,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         RegisterOTPIf_Placeholder.text = LanguageManager.Instance.GetText("Please Enter The OTP Code");
         RegisterPassword_Txt.text = LanguageManager.Instance.GetText("Password");
         RegisterPasswordIf_Placeholder.text = LanguageManager.Instance.GetText("Please Enter Here");
-        RegisterCheckPassword1_Txt.text = LanguageManager.Instance.GetText("Enter New Password.");
-        RegisterCheckPassword2_Txt.text = LanguageManager.Instance.GetText("Allowed Characters: Alphanumeric A-Z, 0-9.");
+        RegisterCheckPassword1_Txt.text = LanguageManager.Instance.GetText("Enter at least one special character.");
+        RegisterCheckPassword2_Txt.text = LanguageManager.Instance.GetText("Enter at least one uppercase and lowercase.");
         RegisterCheckPassword3_Txt.text = LanguageManager.Instance.GetText("At Least 8 Chars.");
         Privacy_TmpTxt.text = LanguageManager.Instance.GetText("Agree To The <color=#79E84B><link=Terms><u>Terms</u></link></color> & <color=#79E84B><link=Privacy Policy><u>Privacy Policy</u></link></color>");
         RegisterSubmitBtn_Txt.text = LanguageManager.Instance.GetText("SUBMIT");
@@ -290,8 +325,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         LostPswOTPIf_Placeholder.text = LanguageManager.Instance.GetText("Please Enter The OTP Code");
         LostPswPassword_Txt.text = LanguageManager.Instance.GetText("Reset Password");
         LosrPswPasswordIf_Placeholder.text = LanguageManager.Instance.GetText("Please Enter Here");
-        LostPswCheckPassword1_Txt.text = LanguageManager.Instance.GetText("Enter New Password.");
-        LostPswCheckPassword2_Txt.text = LanguageManager.Instance.GetText("Allowed Characters: Alphanumeric A-Z, 0-9.");
+        LostPswCheckPassword1_Txt.text = LanguageManager.Instance.GetText("Enter at least one special character.");
+        LostPswCheckPassword2_Txt.text = LanguageManager.Instance.GetText("Enter at least one uppercase and lowercase.");
         LostPswCheckPassword3_Txt.text = LanguageManager.Instance.GetText("At Least 8 Chars.");
         LostPswSubmitBtn_Txt.text = LanguageManager.Instance.GetText("SUBMIT");
 
@@ -497,8 +532,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
             RegisterPasswordError_Txt.text = "";
 
-            bool check1 = GameUtils.CnahgeCheckIcon(true, RegisterCheckPassword1_Img);
-            bool check2 = GameUtils.CnahgeCheckIcon(StringUtils.IsAlphaNumeric(RegisterPassword_If.text), RegisterCheckPassword2_Img);
+            bool check1 = GameUtils.CnahgeCheckIcon(StringUtils.CheckSpecialCharacter(RegisterPassword_If.text), RegisterCheckPassword1_Img);
+            bool check2 = GameUtils.CnahgeCheckIcon(StringUtils.CheckUppercaseAndLowercase(RegisterPassword_If.text), RegisterCheckPassword2_Img);
             bool check3 = GameUtils.CnahgeCheckIcon(RegisterPassword_If.text.Length >= 8, RegisterCheckPassword3_Img);
             isRegisterPasswordCorrect = check1 && check2 && check3;
         });
@@ -568,8 +603,8 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
 
             LostPswPasswordError_Txt.text = "";
 
-            bool check1 = GameUtils.CnahgeCheckIcon(value.Length > 0, LostPswCheckPassword1_Img);
-            bool check2 = GameUtils.CnahgeCheckIcon(StringUtils.IsAlphaNumeric(LosrPswPassword_If.text), LostPswCheckPassword2_Img);
+            bool check1 = GameUtils.CnahgeCheckIcon(StringUtils.CheckSpecialCharacter(LosrPswPassword_If.text), LostPswCheckPassword1_Img);
+            bool check2 = GameUtils.CnahgeCheckIcon(StringUtils.CheckUppercaseAndLowercase(LosrPswPassword_If.text), LostPswCheckPassword2_Img);
             bool check3 = GameUtils.CnahgeCheckIcon(LosrPswPassword_If.text.Length >= 8, LostPswCheckPassword3_Img);
             isLostPswPasswordCorrect = check1 && check2 && check3;
         });
@@ -822,13 +857,11 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
     /// <param name="callBackFunName">回傳方法名</param>
     /// <param name="childNode">資料節點路徑</param>
     private void JudgeDateExists(string callBackFunName, string childNode)
-    {
-        string readPath = $"{Entry.Instance.releaseType}/{FirebaseManager.USER_DATA_PATH}{childNode}/{currVerifyPhoneNumber}";
-        Debug.Log($"Duplicate login judge:{readPath}");
+    {        
         ViewManager.Instance.OpenWaitingView(transform);
-        JSBridgeManager.Instance.ReadDataFromFirebase(readPath,
-                                                      gameObject.name,
-                                                      callBackFunName);
+        JSBridgeManager.Instance.ReadDataFromFirebase($"{Entry.Instance.releaseType}/{FirebaseManager.USER_DATA_PATH}{childNode}/{currVerifyPhoneNumber}",
+                                                       gameObject.name,
+                                                       callBackFunName);
     }
 
     /// <summary>
@@ -981,34 +1014,39 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         {
             if (loginData.password == currVerifyPsw)
             {
-                if (loginData.online == true)
+                //登入成功
+                if (RememberMe_Tog.isOn)
                 {
-                    //已登入
-                    MobileSignInError_Txt.text = LanguageManager.Instance.GetText("Duplicate Login.");
+                    recodePhoneNumber = SignInNumber_If.text;
+                    recodePassword = SignInPassword_If.text;
+                    recodeCountryCodeIndex = SignInNumber_Dd.value;
+
+                    //有勾選記住帳號密碼
+                    LocalDataSave();
+
+                    //  後台帳號登入
+                    /*
+                    string LoginUrl =  "/api/app/ace-accounts/login";
+
+                    Login Data = new Login()
+                    {
+                        userNameOrEmailAddress = currUserId,
+                        password = currVerifyPsw,
+                    };
+
+                    SwaggerAPIManager.Instance.SendPostAPI<Login, Respon>(LoginUrl, Data);
+                    */
                 }
                 else
                 {
-                    //登入成功
-                    if (RememberMe_Tog.isOn)
-                    {
-                        recodePhoneNumber = SignInNumber_If.text;
-                        recodePassword = SignInPassword_If.text;
-                        recodeCountryCodeIndex = SignInNumber_Dd.value;
-
-                        //有勾選記住帳號密碼
-                        LocalDataSave();
-                    }
-                    else
-                    {
-                        //沒勾選清空資料
-                        PlayerPrefs.SetInt(LocalCountryCodeIndex, 0);
-                        PlayerPrefs.SetString(LocalPhoneNumber, "");
-                        PlayerPrefs.SetString(LocalPaswword, "");
-                    }
-
-                    DataManager.UserLoginType = LoginType.phoneUser;
-                    OnIntoLobby();
+                    //沒勾選清空資料
+                    PlayerPrefs.SetInt(LocalCountryCodeIndex, 0);
+                    PlayerPrefs.SetString(LocalPhoneNumber, "");
+                    PlayerPrefs.SetString(LocalPaswword, "");
                 }
+
+                DataManager.UserLoginType = LoginType.phoneUser;
+                OnIntoLobby();
             }
             else
             {
@@ -1197,6 +1235,20 @@ public class LoginView : MonoBehaviour, IPointerClickHandler
         };
         JSBridgeManager.Instance.WriteDataFromFirebase($"{Entry.Instance.releaseType}/{FirebaseManager.USER_DATA_PATH }{LoginType.phoneUser}/{currVerifyPhoneNumber}",
                                                         dataDic);
+
+        /*
+        //  後台創建帳號
+        string RegisterUrl = "/api/app/ace-accounts/register";
+
+        Register RegisterData = new Register() {
+            phoneNumber = currVerifyPhoneNumber,
+            userName = currUserId,
+            password = currVerifyPsw,
+            confirmPassword = currVerifyPsw,
+        };
+
+        SwaggerAPIManager.Instance.SendPostAPI<Register, Respon>(RegisterUrl, RegisterData);
+        */
     }
 
     /// <summary>

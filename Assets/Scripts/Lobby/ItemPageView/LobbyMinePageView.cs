@@ -74,7 +74,7 @@ public class LobbyMinePageView : MonoBehaviour
 
     [Header("邀請碼")]
     [SerializeField]
-    RectTransform Invitation_obj;
+    RectTransform Invitation_Obj;
     [SerializeField]
     Image Invitation_Img;
     [SerializeField]
@@ -241,6 +241,7 @@ public class LobbyMinePageView : MonoBehaviour
         {
             AccountBalance_Obj,     //帳戶餘額
             ScoreRecord_Obj,        //分數紀錄
+            Invitation_Obj,
         };
         foreach (var expandObj in expandObjList)
         {
@@ -352,7 +353,7 @@ public class LobbyMinePageView : MonoBehaviour
         {
             isInviteUIExpand = !isInviteUIExpand;
             StartCoroutine(ISwitchContent(isInviteUIExpand,
-                                            Invitation_obj, 
+                                            Invitation_Obj, 
                                             Invitation_Img));
         });
 
@@ -386,8 +387,8 @@ public class LobbyMinePageView : MonoBehaviour
 
             //顯示提示框
             ConfirmView confirmView = ViewManager.Instance.OpenConfirmView();
-            confirmView.SetContent(LanguageManager.Instance.GetText("Prompt"),
-                                   LanguageManager.Instance.GetText("Cannot be changed after binding!!!"));
+            confirmView.SetContent(LanguageManager.Instance.GetText("Notice"),
+                                   LanguageManager.Instance.GetText("Cannot Be Changed After Linking."));
             confirmView.SetBnt(() =>
             {
                 ViewManager.Instance.OpenWaitingView(transform);
