@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
+using static SwaggerAPIManager;
 
 public class Entry : UnitySingleton<Entry>
 {
@@ -88,7 +89,19 @@ public class Entry : UnitySingleton<Entry>
             }
         }
         #endregion
+        if (Input.GetKeyDown(KeyCode.F)) 
+        {
+            base.Awake();
+            Reagister t = new Reagister()
+            {
+                phoneNumber = "+4571515",
+            };
+
+            SwaggerAPIManager.Instance.SendPostAPI<Reagister, Callback>("/api/app/ace-accounts/register", t);
+        }
+
     }
+
 
     #region Instagram登入
 

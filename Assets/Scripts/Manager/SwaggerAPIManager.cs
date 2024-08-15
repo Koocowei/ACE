@@ -8,11 +8,31 @@ using UnityEngine.Events;
 public class SwaggerAPIManager : UnitySingleton<SwaggerAPIManager>
 {
     private const string BASE_URL = "https://aceserver-dev.azurewebsites.net";           //API Base Url
-
+    
     public override void Awake()
     {
         base.Awake();
+        Reagister t = new Reagister()
+        {
+            phoneNumber = "+4571515",
+        };
+
+        SendPostAPI<Reagister, Callback>("/api/app/ace-accounts/register", t);
     }
+   
+    public class Reagister
+    {
+        public string phoneNumber;
+      
+    }
+    public class Callback
+    {
+        public string regddg;
+    }
+
+
+
+
 
     /// <summary>
     /// 發送POST請求
