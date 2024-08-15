@@ -325,7 +325,7 @@ public class GameView : MonoBehaviour
         //遊戲繼續按鈕
         GameContinue_Btn.onClick.AddListener(() =>
         {
-            GameRoomManager.Instance.OnGamePause(false);
+     
         });
 
         #region 選單
@@ -1358,6 +1358,13 @@ public class GameView : MonoBehaviour
             {
                 gamePlayerInfo.PlayerBet(player.currAllBetChips, player.carryChips);
             }
+
+            if (player.userId == gameRoomData.currActionerId)
+            {
+                gamePlayerInfo.ActionFrame = true;
+                gamePlayerInfo.CountDown(DataManager.StartCountDownTime,
+                                         gameRoomData.actionCD);
+            }
         }
 
         //底池
@@ -1767,7 +1774,7 @@ public class GameView : MonoBehaviour
 
         //贏得類型顯示
         WinType_Txt.text = LanguageManager.Instance.GetText("Pot");
-        TotalPot_Txt.text = StringUtils.SetChipsUnit(gameRoomData.potWinData.potWinChips);
+        SetTotalPot = gameRoomData.potWinData.potWinChips;
 
         //贏家效果
         foreach (var potWinnerId in gameRoomData.potWinData.potWinnersId)
@@ -1870,7 +1877,7 @@ public class GameView : MonoBehaviour
     public IEnumerator SideResult(GameRoomData gameRoomData)
     {
         thisData.SideWinnerList = new List<string>();
-        thisData.SideWinChips = 0;
+        thisData.SideWinChips = gameRoomData.sideWinData.sideWinChips / gameRoomData.sideWinData.sideWinnersId.Count();
 
         //開啟遮罩
         foreach (var player in gamePlayerInfoList)
@@ -1879,9 +1886,12 @@ public class GameView : MonoBehaviour
             player.IsWinnerActive = false;
         }
 
+        WinType_Txt.text = LanguageManager.Instance.GetText("Side");
+        SetTotalPot = gameRoomData.potWinData.potWinChips;
+        Debug.Log($"邊池結果::{gameRoomData.potWinData.potWinChips}");
+
         //邊池贏家效果
         thisData.SideWinnerList = new List<string>();
-        Debug.Log($"邊池結果數量:{gameRoomData.sideWinData.sideWinnersId.Count()}");
         foreach (var sideWinnerId in gameRoomData.sideWinData.sideWinnersId)
         {
             CloseAllPokerEffect();
@@ -1890,14 +1900,9 @@ public class GameView : MonoBehaviour
                                                                       .FirstOrDefault()
                                                                       .Value;
 
-            WinType_Txt.text = LanguageManager.Instance.GetText("Side");
-            TotalPot_Txt.text = StringUtils.SetChipsUnit(gameRoomData.sideWinData.sideWinChips);
-
             thisData.SideWinnerList.Add(sideWinnerId);
 
             GamePlayerInfo player = GetPlayer(sideWinnerId);
-
-            thisData.SideWinChips = gameRoomData.sideWinData.sideWinChips / gameRoomData.sideWinData.sideWinnersId.Count();
 
             player.IsOpenInfoMask = false;
             player.IsWinnerActive = true;
@@ -1939,6 +1944,15 @@ public class GameView : MonoBehaviour
                 GamePlayerInfo player = GetPlayer(backChipsData.Value.backUserId);
                 player.SetBackChips = backChipsData.Value.backChipsValue;
                 thisData.BackChipsDic.Add(player.SeatIndex, backChipsData.Value.backChipsValue);
+
+                GameRoomPlayerData playerData = gameRoomData.playerDataDic.Where(x => x.Value.userId == backChipsData.Value.backUserId)
+                                                                          .FirstOrDefault()
+                                                                          .Value;
+
+                if (playerData != null)
+                {
+                    player.PlayerRoomChips = playerData.carryChips;
+                }               
             }
         }
 
@@ -1961,7 +1975,6 @@ public class GameView : MonoBehaviour
 
             processHistoryData.processStepHistoryDataList.Add(processStepHistoryData);
         }
-
     }
 
     /// <summary>
@@ -2426,14 +2439,15 @@ public class GameView : MonoBehaviour
     /// <summary>
     /// 關閉所有玩家倒數訊息
     /// </summary>
-    public void CloseCDInfo()
+    /// <param name="id">排除的ID</param>
+    public void CloseCDInfo(string id)
     {
         foreach (var player in gameRoomData.playerDataDic.Values)
         {
             GamePlayerInfo playerInfo = gamePlayerInfoList.Where(x => x.UserId == player.userId)
                                                           .FirstOrDefault();
                                                           
-            if (player.userId != gameRoomData.currActionerId &&
+            if (player.userId != id &&
                 playerInfo != null)
             {
                 if ((PlayerStateEnum)player.gameState == PlayerStateEnum.Playing ||
