@@ -7,28 +7,34 @@ using UnityEngine.Events;
 
 public class SwaggerAPIManager : UnitySingleton<SwaggerAPIManager>
 {
-    private const string BASE_URL = "https://aceserver-dev.azurewebsites.net";           //API Base Url
+    private const string BASE_URL = "https://aceserver-dev.azurewebsites.net/";           //API Base Url
     
     public override void Awake()
     {
-        base.Awake();
-        Reagister t = new Reagister()
-        {
-            phoneNumber = "+4571515",
-        };
+        //base.Awake();
+        //Reagister t = new Reagister()
+        //{
+        //    phoneNumber = "+4571515",
+        //    userName = "username",
+        //};
 
-        SendPostAPI<Reagister, Callback>("/api/app/ace-accounts/register", t);
+        //SendPostAPI<Reagister, Callback>("/api/app/ace-accounts/register", t);
     }
-   
-    public class Reagister
-    {
-        public string phoneNumber;
-      
-    }
-    public class Callback
-    {
-        public string regddg;
-    }
+
+    //public class Reagister
+    //{
+    //    public string phoneNumber;
+    //    public string userName;
+    //    public string password;
+    //    public string confirmPassword;
+    //}
+    //public class Callback
+    //{
+    //    public string regddg;
+    //    public string abc;
+    //    public string efg;
+    //    public string hij;
+    //}
 
 
 
@@ -82,8 +88,8 @@ public class SwaggerAPIManager : UnitySingleton<SwaggerAPIManager>
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
             //請求錯誤
-            Debug.LogError(request.error);
-            errCallback?.Invoke();
+            string errorJson = request.downloadHandler.text;
+            Debug.LogError($"Error: {request.error}\nError Details: {errorJson}");
         }
         else
         {

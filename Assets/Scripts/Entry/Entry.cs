@@ -91,16 +91,38 @@ public class Entry : UnitySingleton<Entry>
         #endregion
         if (Input.GetKeyDown(KeyCode.F)) 
         {
-            base.Awake();
+            //base.Awake();
             Reagister t = new Reagister()
             {
-                phoneNumber = "+4571515",
+                phoneNumber = "+886123456789",
+                userName = "Wei123",
+                password = "Wei123456789",
+                confirmPassword = "Wei123456789",
             };
 
-            SwaggerAPIManager.Instance.SendPostAPI<Reagister, Callback>("/api/app/ace-accounts/register", t);
+            SwaggerAPIManager.Instance.SendPostAPI<Reagister, Callback>("api/app/ace-accounts/register", t);
         }
 
     }
+    public class Reagister
+    {
+        public string phoneNumber;
+        public string userName;
+        public string password;
+        public string confirmPassword;
+
+        
+       
+
+    }
+    public class Callback
+    {
+        //public string result;
+        //public string abc;
+        //public string efg;
+        //public string hij;
+    }
+   
 
 
     #region Instagram登入
