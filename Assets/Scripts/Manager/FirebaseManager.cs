@@ -27,7 +27,8 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     public const string PLAYER_DATA_LIST = "playerDataDic";                                 //房間內所有玩家列表路徑
     public const string PLAYING_PLAYER_ID = "playingPlayersIdList";                         //遊戲中玩家ID列表路徑
     public const string BET_ACTION_DATA = "betActionDataDic";                               //下注行為資料路徑
-    public const string ALL_IN_PLAYER_DATA = "allInDataDic";                                //AllIn玩家資料路徑
+    public const string POT_WIN_DATA = "potWinData";                                        //底池獲勝資料路徑
+    public const string SIDE_WIN_DATA = "sideWinData";                                      //邊池獲勝資料路徑
     public const string SMALL_BLIND = "smallBlind";                                         //小盲值
     public const string ROBOT_INDEX = "robotIndex";                                         //機器人編號
     public const string ROOM_HOST_ID = "hostId";                                            //房主ID
@@ -51,12 +52,23 @@ public class FirebaseManager : UnitySingleton<FirebaseManager>
     public const string CURR_ALL_BET_CHIPS = "currAllBetChips";                             //該回合總下注籌碼
     public const string ALL_BET_CHIPS = "allBetChips";                                      //該局總下注籌碼
     public const string IS_BET = "isBet";                                                   //該流程是否已下注
+    public const string IS_SIT_OUT = "isSitOut";                                            //是否保留座位離開
 
     [Header("下注行為")]
     public const string BET_ACTIONER_ID = "betActionerId";                                  //下注玩家ID
     public const string BET_ACTION = "betAction";                                           //(BetActingEnum)下注行為
     public const string BET_ACTION_VALUE = "betActionValue";                                //下注籌碼值
     public const string UPDATE_CARRY_CHIPS = "updateCarryChips";                            //更新後的攜帶籌碼
+
+    [Header("底池獲勝資料")]
+    public const string POT_WIN_CHIPS = "potWinChips";                                      //底池獲得籌碼
+    public const string POT_WINNERS_ID = "potWinnersId";                                    //底池獲得贏家ID
+    public const string IS_HAVE_SIDE = "isHaveSide";                                        //是否有邊池
+
+    [Header("邊池獲勝資料")]
+    public const string SIDE_WIN_CHIPS = "sideWinChips";                                     //邊池獲得籌碼
+    public const string SIDE_WINNERS_ID = "sideWinnersId";                                   //邊池獲得贏家ID
+    public const string BACK_CHIPS = "backChips";                                            //退回籌碼(格式:ID_退回籌碼)
 
     public override void Awake()
     {
@@ -131,6 +143,8 @@ public class CheckUserData
 [Serializable]
 public class AccountData
 {
+    public bool online;                     //在線狀態
+    public long last_changed;               //最後更新時間
     public string userId;                   //用戶ID
     public string phoneNumber;              //登入手機號
     public string password;                 //登入密碼
@@ -163,9 +177,10 @@ public class QueryRoom
 public class GameRoomData
 {
     public Dictionary<string, GameRoomPlayerData> playerDataDic;        //房間內玩家資料
-    public Dictionary<string, GameRoomPlayerData> allInDataDic;         //AllIn玩家資料
     public List<string> playingPlayersIdList;                           //遊戲中玩家ID列表
     public BetActionData betActionDataDic;                              //下注行為資料
+    public PotWinData potWinData;                                       //底池獲勝資料
+    public SideWinData sideWinData;                                     //邊池獲勝資料
     public int currGameFlow;                                            //(GameFlowEnum)當前遊戲流程(發牌/盲注/翻牌/轉牌/河牌/遊戲結果(主池/邊池))
     public double smallBlind;                                           //小盲值
     public string hostId;                                               //房主ID
@@ -199,6 +214,7 @@ public class GameRoomPlayerData
     public double currAllBetChips;                  //當前流程總下注籌碼
     public double allBetChips;                      //該局總下注籌碼
     public bool isBet;                              //該流程是否已下注
+    public bool isSitOut;                           //是否保留座位離開
 }
 
 /// <summary>
@@ -211,6 +227,29 @@ public class BetActionData
     public int betAction;              //(BetActingEnum)下注行為
     public double betActionValue;      //下注籌碼值
     public double updateCarryChips;    //更新後的攜帶籌碼
+}
+
+/// <summary>
+/// 底池獲勝資料
+/// </summary>
+[SerializeField]
+public class PotWinData
+{
+    public double potWinChips;                                          //底池獲得籌碼
+    public List<string> potWinnersId;                                   //底池獲得贏家ID
+    public bool isHaveSide;                                             //是否有邊池
+}
+
+/// <summary>
+/// 邊池獲勝資料
+/// </summary>
+[SerializeField]
+public class SideWinData
+{
+    public double sideWinChips;                                         //邊池獲得籌碼
+    public List<string> sideWinnersId;                                  //邊池獲得贏家ID
+    public List<string> backChips;                                      //退回籌碼(格式:ID_退回籌碼)
+
 }
 
 #endregion
@@ -245,12 +284,14 @@ public enum PlayerStateEnum
 public enum GameFlowEnum
 {
     None,
-    Licensing,          //發牌
-    SetBlind,           //大小盲
-    Flop,               //翻牌
-    Turn,               //轉牌
-    River,              //河牌
-    PotResult,          //遊戲結果
+    Licensing,                  //發牌
+    SetBlind,                   //大小盲
+    Flop,                       //翻牌
+    Turn,                       //轉牌
+    River,                      //河牌
+    PotResult,                  //底池結果
+    SideResult,                 //邊池結果
+    OnePlayerLeftResult,        //剩餘1名玩家結果
 }
 
 /// <summary>

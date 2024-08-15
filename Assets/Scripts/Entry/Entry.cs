@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
-using UnityEngine.UI;
-using System.Threading;
+
 public class Entry : UnitySingleton<Entry>
 {
     #region 測試
