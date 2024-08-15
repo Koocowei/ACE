@@ -105,6 +105,16 @@
     "zh_TW": "輸入暱稱。"
   },
   {
+    "ID": "Enter at least one special character.",
+    "English": "Enter at least one special character.",
+    "zh_TW": "至少輸入一個特殊字元"
+  },
+  {
+    "ID": "Enter at least one uppercase and lowercase.",
+    "English": "Contains at least one uppercase and lowercase.",
+    "zh_TW": "至少輸入一個大寫和小寫"
+  },
+  {
     "ID": "Less Than 10 Chars.",
     "English": "Less Than 10 Chars.",
     "zh_TW": "少於 10 個字元。"
@@ -305,9 +315,14 @@
     "zh_TW": "如果您現在離開，您將無法取回質押的籌碼。"
   },
   {
-    "ID": "Cannot be changed after binding!!!",
-    "English": "Cannot be changed after binding!!!",
-    "zh_TW": "綁定後不能變更!!!"
+    "ID": "Cannot Be Changed After Linking.",
+    "English": "Cannot Be Changed After Linking.",
+    "zh_TW": "連結後不能變更!!!"
+  },
+  {
+    "ID": "Notice",
+    "English": "Notice",
+    "zh_TW": "注意"
   },
   {
     "ID": "錯誤訊息",
